@@ -1,13 +1,10 @@
 {
-    "name": "substreams-sink-rabbitmq",
-    "version": "0.0.1",
-    "description": "Substreams RabbitMQ sink module",
+    "name": "substreams-sink",
+    "version": "0.1.0",
+    "description": "Substreams Sink",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "bin": {
-        "substreams-sink-rabbitmq": "dist/bin/cli.js"
-    },
-    "repository": "git@github.com:pinax-network/substreams-sink-rabbitmq.git",
+    "repository": "git@github.com:pinax-network/substreams-sink.git",
     "keywords": [
         "substreams",
         "streamingfast",
@@ -34,22 +31,16 @@
     ],
     "license": "MIT OR Apache-2.0",
     "scripts": {
-        "prepublishOnly": "tsc",
-        "build": "tsup index.ts bin/cli.ts --dts",
-        "pkg": "ncc build bin/cli.ts -o build && pkg build/index.js"
+        "prepublishOnly": "npm run build",
+        "build": "tsup index.ts bin/cli.ts --dts"
     },
     "dependencies": {
-        "commander": "^10.0.0",
-        "dotenv": "^16.0.3",
-        "substreams": "^0.4.2",
-        "winston": "^3.8.2"
+        "commander": "10.x",
+        "dotenv": "16.x",
+        "substreams": "0.5.x"
     },
     "devDependencies": {
-        "@vercel/ncc": "^0.36.1",
-        "pkg": "^5.8.1",
-        "ts-node-dev": "^2.0.0",
-        "tsup": "^6.7.0",
-        "typed-emitter": "^2.1.0",
-        "typescript": "^5.0.2"
+        "tsup": "6.x",
+        "typescript": "5.x"
     }
 }

@@ -1,38 +1,4 @@
-# [`Substreams`](https://substreams.streamingfast.io/) Sink CLI `Node.js`
-
-[<img alt="github" src="" height="20">](https://github.com/pinax-network/substreams-sink)
-[<img alt="npm" src="" height="20">](https://www.npmjs.com/package/substreams-sink)
-[<img alt="GitHub Workflow Status" src="" height="20">](https://github.com/pinax-network/substreams-sink/actions?query=branch%3Amain)
-
-> `substreams-sink` is the code template to build Substreams sinks in NodeJS. Sinks allows developers to pipe data extracted from a blockchain to a specified application.
-
-## 📖 Documentation
-
-<!-- ### https://www.npmjs.com/package/substreams-sink -->
-
-### Further resources
-
-- [**Substreams** documentation](https://substreams.streamingfast.io)
-
-## 🚀 Quick start
-
-### Installation
-
-```bash
-npm install substreams-sink
-```
-
-### Features
-
-- [x] base Commander CLI 
-- [x] download & run Substreams
-- [x] handle `cursor.lock` file
-- [x] reads `SUBSTREAMS_API_TOKEN` from `.env` file
-
-### Usage
-
-```js
-import { cli, run, RunOptions } from "substreams-sink";
+import { cli, run, RunOptions } from "../";
 
 const pkg = {
     name: 'substreams-sink-rabbitmq',
@@ -67,4 +33,4 @@ async function action(manifest: string, moduleName: string, options: ActionOptio
     })
     substreams.start();
 }
-```
+
