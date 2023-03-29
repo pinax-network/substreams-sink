@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Substreams Sink",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -37,7 +37,8 @@
     "dependencies": {
         "commander": "10.x",
         "dotenv": "16.x",
-        "substreams": "0.5.x"
+        "substreams": "0.5.x",
+        "winston": "3.x"
     },
     "devDependencies": {
         "tsup": "6.x",

@@ -1,10 +1,11 @@
-import { cli, run, RunOptions } from "../";
+import { cli, run, logger, RunOptions } from "../";
 
 const pkg = {
     name: 'substreams-sink-rabbitmq',
     version: '0.1.0',
     description: 'Substreams data to RabbitMQ',
 }
+logger.defaultMeta = { service: pkg.name };
 
 const program = cli.program(pkg);
 const command = cli.run(program, pkg);
@@ -26,10 +27,10 @@ async function action(manifest: string, moduleName: string, options: ActionOptio
     const substreams = await run(manifest, moduleName, options);
     const { address, port, username, password } = options;
     const rabbitmq = `amqp://${username}:${password}@${address}:${port}`;
-    console.log(`Connecting to RabbitMQ: ${rabbitmq}`);
+    logger.info("connect", {rabbitmq});
 
     substreams.on("anyMessage", message => {
-        console.log(message);
+        logger.info("anyMessage", message);
     })
     substreams.start();
 }

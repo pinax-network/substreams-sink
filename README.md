@@ -24,21 +24,23 @@ npm install substreams-sink
 
 ### Features
 
-- [x] base Commander CLI 
-- [x] download & run Substreams
-- [x] handle `cursor.lock` file
+- [x] includes [Commander.js](https://github.com/tj/commander.js/) helper CLI 
+- [x] includes [Winston](https://github.com/winstonjs/winston) helper logger 
+- [x] includes **Substreams** `run()` helper method & `RunOptions` interface
+- [x] handle reading/saving **Substreams** `cursor.lock` file
 - [x] reads `SUBSTREAMS_API_TOKEN` from `.env` file
 
 ### Example
 
 ```js
-import { cli, run, RunOptions } from "substreams-sink";
+import { cli, run, logger, RunOptions } from "substreams-sink";
 
 const pkg = {
     name: 'substreams-sink-rabbitmq',
     version: '0.1.0',
     description: 'Substreams data to RabbitMQ',
 }
+logger.defaultMeta = { service: pkg.name };
 
 const program = cli.program(pkg);
 const command = cli.run(program, pkg);
@@ -60,10 +62,10 @@ async function action(manifest: string, moduleName: string, options: ActionOptio
     const substreams = await run(manifest, moduleName, options);
     const { address, port, username, password } = options;
     const rabbitmq = `amqp://${username}:${password}@${address}:${port}`;
-    console.log(`Connecting to RabbitMQ: ${rabbitmq}`);
+    logger.info("connect", {rabbitmq});
 
     substreams.on("anyMessage", message => {
-        console.log(message);
+        logger.info("anyMessage", message);
     })
     substreams.start();
 }

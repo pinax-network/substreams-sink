@@ -1,7 +1,8 @@
 import fs from "node:fs";
-import { download, Substreams } from "substreams";
+import { download, Substreams, timeout } from "substreams";
 import dotenv from "dotenv";
 import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE } from "./constants";
+import { logger } from "./logger";
 dotenv.config();
 
 export interface RunOptions {
@@ -26,10 +27,15 @@ export async function run(manifest: string, outputModule: string, options: RunOp
     if (!outputModule) throw new Error('[output-module] is required');
     if (!substreams_api_token) throw new Error('[substreams-api-token] is required');
 
-    const spkg = await download(manifest);
-
     // read cursor file
     let startCursor = fs.existsSync(cursorFile) ? fs.readFileSync(cursorFile, 'utf8') : "";
+    logger.info("run", { startCursor, manifest, outputModule, options });
+
+    const spkg = await download(manifest);
+    logger.info("download", { manifest })
+
+    // delay before start
+    if ( options.delayBeforeStart ) await timeout(Number(options.delayBeforeStart) * 1000);
 
     // Initialize Substreams
     const substreams = new Substreams(spkg, outputModule, {
