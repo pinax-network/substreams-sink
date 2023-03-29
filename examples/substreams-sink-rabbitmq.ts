@@ -1,3 +1,4 @@
+import { download, createHash } from "substreams";
 import { cli, run, logger, RunOptions } from "../";
 
 const pkg = {
@@ -24,14 +25,22 @@ interface ActionOptions extends RunOptions {
 }
 
 async function action(manifest: string, moduleName: string, options: ActionOptions) {
-    const substreams = await run(manifest, moduleName, options);
+    // Download Substreams (or read from local file system)
+    const spkg = await download(manifest);
+    const hash = createHash(spkg);
+    logger.info("download", {manifest, hash});
+
+    // Handle custom Sink Options
     const { address, port, username, password } = options;
     const rabbitmq = `amqp://${username}:${password}@${address}:${port}`;
     logger.info("connect", {rabbitmq});
 
+    // Run Substreams
+    const substreams = run(spkg, moduleName, options);
     substreams.on("anyMessage", message => {
+        // Handle message
         logger.info("anyMessage", message);
     })
-    substreams.start();
+    substreams.start(options.delayBeforeStart);
 }
 

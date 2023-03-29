@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { download, Substreams, timeout } from "substreams";
+import { Substreams } from "substreams";
 import dotenv from "dotenv";
 import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE } from "./constants";
 import { logger } from "./logger";
@@ -16,7 +16,7 @@ export interface RunOptions {
     startCursor?: string,
 }
 
-export async function run(manifest: string, outputModule: string, options: RunOptions = {}) {
+export function run(spkg: Uint8Array, outputModule: string, options: RunOptions = {}) {
     // Substreams options
     const substreamsEndpoint = options.substreamsEndpoint ?? DEFAULT_SUBSTREAMS_ENDPOINT;
     const substreams_api_token_envvar = options.substreamsApiTokenEnvvar ?? DEFAULT_SUBSTREAMS_API_TOKEN_ENV;
@@ -29,13 +29,7 @@ export async function run(manifest: string, outputModule: string, options: RunOp
 
     // read cursor file
     let startCursor = fs.existsSync(cursorFile) ? fs.readFileSync(cursorFile, 'utf8') : "";
-    logger.info("run", { startCursor, manifest, outputModule, options });
-
-    const spkg = await download(manifest);
-    logger.info("download", { manifest })
-
-    // delay before start
-    if ( options.delayBeforeStart ) await timeout(Number(options.delayBeforeStart) * 1000);
+    logger.info("run", { startCursor, outputModule, options });
 
     // Initialize Substreams
     const substreams = new Substreams(spkg, outputModule, {
