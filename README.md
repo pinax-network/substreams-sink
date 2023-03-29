@@ -29,7 +29,7 @@ npm install substreams-sink
 - [x] handle `cursor.lock` file
 - [x] reads `SUBSTREAMS_API_TOKEN` from `.env` file
 
-### Usage
+### Example
 
 ```js
 import { cli, run, RunOptions } from "substreams-sink";
