@@ -1,8 +1,8 @@
 # [`Substreams`](https://substreams.streamingfast.io/) Sink CLI `Node.js`
 
-[<img alt="github" src="" height="20">](https://github.com/pinax-network/substreams-sink)
-[<img alt="npm" src="" height="20">](https://www.npmjs.com/package/substreams-sink)
-[<img alt="GitHub Workflow Status" src="" height="20">](https://github.com/pinax-network/substreams-sink/actions?query=branch%3Amain)
+[![Build Status](https://github.com/pinax-network/substreams-sink/actions/workflows/ci.yml/badge.svg)](https://github.com/pinax-network/substreams-sink/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/substreams-sink.svg)](https://badge.fury.io/js/substreams-sink)
+![License](https://img.shields.io/github/license/pinax-network/substreams-sink)
 
 > `substreams-sink` is the code template to build Substreams sinks in NodeJS. Sinks allows developers to pipe data extracted from a blockchain to a specified application.
 
