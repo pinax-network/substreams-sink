@@ -29,6 +29,37 @@ npm install substreams-sink
 - [x] includes **Substreams** `run()` helper method & `RunOptions` interface
 - [x] handle reading/saving **Substreams** `cursor.lock` file
 - [x] reads `SUBSTREAMS_API_TOKEN` from `.env` file
+- [x] includes `--verbose` flag
+- [x] includes `--production-mode` flag
+
+### CLI
+
+```bash
+Usage: substreams-sink run [options] [<manifest>] <module_name>
+
+Substreams Sink CLI
+
+Arguments:
+  <manifest>                              URL or IPFS hash of Substreams package
+  module_name                             Name of the output module (declared in the manifest)
+
+Options:
+  -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from (default:
+                                          "https://mainnet.eth.streamingfast.io:443")
+  -s --start-block <int>                  Start block to stream from (defaults to -1, which means the initialBlock of the first module
+                                          you are streaming)
+  -t --stop-block <string>                Stop block to end stream at, inclusively
+  --substreams-api-token <string>         API token for the substream endpoint
+  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the substream endpoint (default:
+                                          "SUBSTREAMS_API_TOKEN")
+  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes,
+                                          can be used to perform to maintenance on the pod before actually letting it starts (default:
+                                          "0")
+  --cursor-file <string>                  cursor lock file (default: "cursor.lock")
+  --production-mode                       Enable Production Mode, with high-speed parallel processing (default: false)
+  --verbose                               Enable verbose logging (default: false)
+  -h, --help                              display help for command
+```
 
 ### Example
 

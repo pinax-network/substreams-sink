@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { Substreams } from "substreams";
 import dotenv from "dotenv";
-import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE } from "./constants";
+import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE } from "./constants";
 import { logger } from "./logger";
 dotenv.config();
 
@@ -14,6 +14,8 @@ export interface RunOptions {
     delayBeforeStart?: string,
     cursorFile?: string,
     startCursor?: string,
+    productionMode?: boolean,
+    verbose?: boolean,
 }
 
 export function run(spkg: Uint8Array, outputModule: string, options: RunOptions = {}) {
@@ -22,6 +24,11 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     const substreams_api_token_envvar = options.substreamsApiTokenEnvvar ?? DEFAULT_SUBSTREAMS_API_TOKEN_ENV;
     const substreams_api_token = options.substreamsApiToken ?? process ? process.env[substreams_api_token_envvar] : '';
     const cursorFile = options.cursorFile ?? DEFAULT_CURSOR_FILE;
+    const productionMode = options.productionMode ?? DEFAULT_PRODUCTION_MODE;
+    const verbose = options.verbose ?? DEFAULT_VERBOSE;
+
+    // Logger options
+    if ( !verbose ) logger.silent = true;
 
     // Required
     if (!outputModule) throw new Error('[output-module] is required');
@@ -38,7 +45,7 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
         stopBlockNum: options.stopBlock,
         startCursor,
         authorization: substreams_api_token,
-        productionMode: true,
+        productionMode,
     });
 
     substreams.on("cursor", cursor => {

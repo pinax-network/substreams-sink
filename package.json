@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Substreams Sink",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -27,6 +27,10 @@
         {
             "name": "Charles",
             "email": "charles@pinax.network"
+        },
+        {
+            "name": "Francois",
+            "email": "francois@pinax.network"
         }
     ],
     "license": "MIT OR Apache-2.0",
@@ -35,14 +39,14 @@
         "build": "tsup index.ts bin/cli.ts --dts"
     },
     "dependencies": {
-        "commander": "10.x",
-        "dotenv": "16.x",
+        "commander": "latest",
+        "dotenv": "latest",
         "substreams": "^0.5.5",
-        "winston": "3.x"
+        "winston": "latest"
     },
     "devDependencies": {
-        "@types/node": "*",
-        "tsup": "6.x",
-        "typescript": "5.x"
+        "@types/node": "latest",
+        "tsup": "latest",
+        "typescript": "latest"
     }
 }
