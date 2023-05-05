@@ -24,8 +24,8 @@ npm install substreams-sink
 
 ### Features
 
-- [x] includes [Commander.js](https://github.com/tj/commander.js/) helper CLI 
-- [x] includes [Winston](https://github.com/winstonjs/winston) helper logger 
+- [x] includes [Commander.js](https://github.com/tj/commander.js/) helper CLI
+- [x] includes [Winston](https://github.com/winstonjs/winston) helper logger
 - [x] includes **Substreams** `run()` helper method & `RunOptions` interface
 - [x] handle reading/saving **Substreams** `cursor.lock` file
 - [x] reads `SUBSTREAMS_API_TOKEN` from `.env` file

@@ -28,7 +28,7 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     const verbose = options.verbose ?? DEFAULT_VERBOSE;
 
     // Logger options
-    if ( !verbose ) logger.silent = true;
+    if ( verbose ) logger.silent = false;
 
     // Required
     if (!outputModule) throw new Error('[output-module] is required');
