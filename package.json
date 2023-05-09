@@ -1,10 +1,11 @@
 {
     "name": "substreams-sink",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "description": "Substreams Sink",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "repository": "git@github.com:pinax-network/substreams-sink.git",
+    "type": "module",
     "keywords": [
         "substreams",
         "streamingfast",
@@ -45,6 +46,7 @@
         "winston": "latest"
     },
     "devDependencies": {
+        "@tsconfig/esm": "latest",
         "@types/node": "latest",
         "tsup": "latest",
         "typescript": "latest"

@@ -1,8 +1,8 @@
-import fs from "node:fs";
+import * as fs from "node:fs";
 import { Substreams } from "substreams";
 import dotenv from "dotenv";
-import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE } from "./constants";
-import { logger } from "./logger";
+import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE } from "./constants.js";
+import { logger } from "./logger.js";
 dotenv.config();
 
 export interface RunOptions {

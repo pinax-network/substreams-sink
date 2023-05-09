@@ -5,7 +5,7 @@ import {
     DEFAULT_SUBSTREAMS_API_TOKEN_ENV,
     DEFAULT_SUBSTREAMS_ENDPOINT,
     DEFAULT_VERBOSE,
-} from "../index";
+} from "../index.js";
 
 interface Package {
     name: string;

@@ -1,4 +1,4 @@
-export * as cli from "./src/cli";
-export * from "./src/run";
-export * from "./src/constants";
-export * from "./src/logger";
+export * as cli from "./src/cli.js";
+export * from "./src/run.js";
+export * from "./src/constants.js";
+export * from "./src/logger.js";
