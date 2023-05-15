@@ -36,8 +36,8 @@
     ],
     "license": "MIT OR Apache-2.0",
     "scripts": {
-        "prepublishOnly": "npm run build",
-        "build": "tsup index.ts bin/cli.ts --dts"
+        "build": "tsc",
+        "prepublishOnly": "npm run build"
     },
     "dependencies": {
         "commander": "latest",
@@ -48,7 +48,6 @@
     "devDependencies": {
         "@tsconfig/esm": "latest",
         "@types/node": "latest",
-        "tsup": "latest",
         "typescript": "latest"
     }
 }

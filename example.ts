@@ -1,5 +1,5 @@
 import { download, createHash } from "substreams";
-import { cli, run, logger, RunOptions } from "../";
+import { cli, run, logger, RunOptions } from "./dist";
 
 const pkg = {
     name: 'substreams-sink-rabbitmq',

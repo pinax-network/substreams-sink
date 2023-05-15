@@ -1,8 +1,11 @@
 {
   "extends": "@tsconfig/esm/tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "moduleResolution": "nodenext",
-    "resolveJsonModule": true
-  }
+    "verbatimModuleSyntax": false,
+    "outDir": "dist",
+    "declaration": true
+  },
+  "include": ["src"]
 }
