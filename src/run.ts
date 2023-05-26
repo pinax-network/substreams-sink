@@ -3,7 +3,7 @@ import { Substreams } from "substreams";
 import dotenv from "dotenv";
 import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE, DEFAULT_PROMETHEUS_ADDRESS, DEFAULT_PROMETHEUS_PORT } from "./constants.js";
 import { logger } from "./logger.js";
-import { listen } from "./prometheus.js";
+import { listen, updateMetrics } from "./prometheus.js";
 dotenv.config();
 
 export interface RunOptions {
@@ -71,8 +71,8 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
 
     // Metrics 
     if (metricsListenAddress && metricsListenPort) {
-        substreams.on("anyMessage", message => {
-            // Update metrics
+        substreams.on("anyMessage", async message => {
+            await updateMetrics(message);
         });
     }
 
