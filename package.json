@@ -41,12 +41,14 @@
     "dependencies": {
         "commander": "latest",
         "dotenv": "latest",
+        "prom-client": "^14.2.0",
         "substreams": "^0.7.1",
         "winston": "latest"
     },
     "devDependencies": {
         "@tsconfig/recommended": "latest",
         "@types/node": "latest",
+        "tsup": "^6.7.0",
         "typescript": "latest"
     }
 }

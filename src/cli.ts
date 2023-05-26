@@ -40,4 +40,6 @@ export function run(program: Command, pkg: Package) {
         .option('--cursor-file <string>', 'cursor lock file', DEFAULT_CURSOR_FILE)
         .option('--production-mode', 'Enable Production Mode, with high-speed parallel processing', DEFAULT_PRODUCTION_MODE)
         .option('--verbose', 'Enable verbose logging', DEFAULT_VERBOSE)
+        .option('--metrics-listen-address', 'If non-empty, the process will listen on this address for Prometheus metrics requests')
+        .option('--metrics-listen-port', 'If non-empty, the process will listen on this port for Prometheus metrics requests')
 }

@@ -1,8 +1,9 @@
 import * as fs from "node:fs";
 import { Substreams } from "substreams";
 import dotenv from "dotenv";
-import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE } from "./constants.js";
+import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE, DEFAULT_PROMETHEUS_ADDRESS, DEFAULT_PROMETHEUS_PORT } from "./constants.js";
 import { logger } from "./logger.js";
+import { listen } from "./prometheus.js";
 dotenv.config();
 
 export interface RunOptions {
@@ -16,6 +17,8 @@ export interface RunOptions {
     startCursor?: string,
     productionMode?: boolean,
     verbose?: boolean,
+    metricsListenAddress?: string,
+    metricsListenPort?: number,
 }
 
 export function run(spkg: Uint8Array, outputModule: string, options: RunOptions = {}) {
@@ -27,8 +30,20 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     const productionMode = options.productionMode ?? DEFAULT_PRODUCTION_MODE;
     const verbose = options.verbose ?? DEFAULT_VERBOSE;
 
+    let metricsListenAddress = options.metricsListenAddress;
+    let metricsListenPort = options.metricsListenPort;
+
+    // Prometheus options
+    if (metricsListenAddress && !metricsListenPort) {
+        metricsListenPort = DEFAULT_PROMETHEUS_PORT;
+    } else if (!metricsListenAddress && metricsListenPort) {
+        metricsListenAddress = DEFAULT_PROMETHEUS_ADDRESS;
+    } else if (metricsListenAddress && metricsListenPort) {
+        listen(metricsListenPort, metricsListenAddress);
+    }
+
     // Logger options
-    if ( verbose ) logger.silent = false;
+    if (verbose) logger.silent = false;
 
     // Required
     if (!outputModule) throw new Error('[output-module] is required');
@@ -49,9 +64,17 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     });
 
     substreams.on("cursor", cursor => {
-        if ( options.cursorFile ) {
+        if (options.cursorFile) {
             fs.writeFileSync(options.cursorFile, cursor);
         }
-    })
+    });
+
+    // Metrics 
+    if (metricsListenAddress && metricsListenPort) {
+        substreams.on("anyMessage", message => {
+            // Update metrics
+        });
+    }
+
     return substreams;
 }
