@@ -19,6 +19,7 @@ export interface RunOptions {
     verbose?: boolean,
     metricsListenAddress?: string,
     metricsListenPort?: number,
+    params?: string[],
 }
 
 export function run(spkg: Uint8Array, outputModule: string, options: RunOptions = {}) {
@@ -30,17 +31,10 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     const productionMode = options.productionMode ?? DEFAULT_PRODUCTION_MODE;
     const verbose = options.verbose ?? DEFAULT_VERBOSE;
 
-    let metricsListenAddress = options.metricsListenAddress;
-    let metricsListenPort = options.metricsListenPort;
-
-    // Prometheus options
-    if (metricsListenAddress && !metricsListenPort) {
-        metricsListenPort = DEFAULT_PROMETHEUS_PORT;
-    } else if (!metricsListenAddress && metricsListenPort) {
-        metricsListenAddress = DEFAULT_PROMETHEUS_ADDRESS;
-    } else if (metricsListenAddress && metricsListenPort) {
-        listen(metricsListenPort, metricsListenAddress);
-    }
+    // Prometheus Metrics
+    const metricsListenAddress = options.metricsListenAddress ?? DEFAULT_PROMETHEUS_ADDRESS;
+    const metricsListenPort = options.metricsListenPort ?? DEFAULT_PROMETHEUS_PORT;
+    listen(metricsListenPort, metricsListenAddress);
 
     // Logger options
     if (verbose) logger.silent = false;
@@ -63,13 +57,22 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
         productionMode,
     });
 
+    // inject params
+    for ( const param of options?.params ?? []) {
+        const parts = param.split("=")
+        const moduleName = parts[0]
+        const value = param.replace(`${moduleName}=`, "");
+        logger.info("param", {moduleName, value});
+        substreams.param(value, moduleName);
+    }
+
     substreams.on("cursor", cursor => {
         if (options.cursorFile) {
             fs.writeFileSync(options.cursorFile, cursor);
         }
     });
 
-    // Metrics 
+    // Metrics
     if (metricsListenAddress && metricsListenPort) {
         substreams.on("anyMessage", async message => {
             await updateMetrics(message);
