@@ -12,7 +12,7 @@ export const server = http.createServer(async (req, res) => {
 });
 
 // Metrics
-function registerCounter(name: string, help = "help", labelNames: string[] = []): Counter {
+function registerCounter(name: string, help = "help", labelNames: string[] = []) {
     try {
         register.registerMetric(new Counter({ name, help, labelNames }));
         return register.getSingleMetric(name) as Counter;
@@ -21,7 +21,7 @@ function registerCounter(name: string, help = "help", labelNames: string[] = [])
     }
 }
 
-function registerGauge(name: string, help = "help", labelNames: string[] = []): Gauge {
+function registerGauge(name: string, help = "help", labelNames: string[] = []) {
     try {
         register.registerMetric(new Gauge({ name, help, labelNames }));
         return register.getSingleMetric(name) as Gauge;
