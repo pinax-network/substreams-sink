@@ -12,7 +12,7 @@ export const server = http.createServer(async (req, res) => {
 });
 
 // Metrics
-function registerCounter(name: string, help = "help", labelNames: string[] = []) {
+function registerCounter(name: string, help = "help", labelNames: string[] = []): Counter | undefined {
     try {
         register.registerMetric(new Counter({ name, help, labelNames }));
         return register.getSingleMetric(name) as Counter;
@@ -21,7 +21,7 @@ function registerCounter(name: string, help = "help", labelNames: string[] = [])
     }
 }
 
-function registerGauge(name: string, help = "help", labelNames: string[] = []) {
+function registerGauge(name: string, help = "help", labelNames: string[] = []): Gauge | undefined {
     try {
         register.registerMetric(new Gauge({ name, help, labelNames }));
         return register.getSingleMetric(name) as Gauge;
@@ -30,7 +30,7 @@ function registerGauge(name: string, help = "help", labelNames: string[] = []) {
     }
 }
 
-// Register Counters
+// Counters
 export const substreamsSinkMessageSizeBytes = registerCounter("substreams_sink_message_size_bytes", "The number of total bytes of message received from the Substreams backend");
 export const substreamsSinkError = registerCounter("substreams_sink_error", "The error count we encountered when interacting with Substreams for which we had to restart the connection loop");
 export const substreamsSinkDataMessage = registerCounter("substreams_sink_data_message", "The number of data message received");
@@ -39,7 +39,7 @@ export const substreamsSinkUndoMessage = registerCounter("substreams_sink_undo_m
 export const substreamsSinkUnknownMessage = registerCounter("substreams_sink_unknown_message", "The number of unknown message received");
 export const substreamsSinkProgressMessage = registerCounter("substreams_sink_progress_message", "The number of progress message received", ["module"]);
 
-// Register Gauges
+// Gauges
 export const substreamsSinkBackprocessingCompletion = registerGauge("substreams_sink_backprocessing_completion", "Determines if backprocessing is completed, which is if we receive a first data message");
 export const substreamsSinkProgressMessageLastEndBlock = registerGauge("substreams_sink_progress_message_last_end_block", "Latest progress reported processed range end block for each module, usually increments but due scheduling could make that fluctuates up/down", ["module"]);
 
