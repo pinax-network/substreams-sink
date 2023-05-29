@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import { Substreams } from "substreams";
+import { BlockScopedData, Substreams } from "substreams";
 import dotenv from "dotenv";
 import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE, DEFAULT_PROMETHEUS_ADDRESS, DEFAULT_PROMETHEUS_PORT, DEFAULT_METRICS_DISABLED as DEFAULT_METRICS_DISABLED } from "./constants.js";
 import { logger } from "./logger.js";
@@ -77,11 +77,11 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
 
     // Metrics
     if (!metricsDisabled) {
-        substreams.on("block", block => {
+        substreams.on("block", (block: BlockScopedData) => {
             updateBlockDataMetrics(block);
         });
-        substreams.on("progress", progress => { });
-        substreams.on("undo", undo => { });
+        // substreams.on("progress", (progress: ModulesProgress) => { });
+        // substreams.on("undo", (undo: BlockUndoSignal) => { });
     }
 
     return substreams;
