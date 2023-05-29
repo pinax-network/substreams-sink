@@ -7,6 +7,7 @@ import {
     DEFAULT_SUBSTREAMS_API_TOKEN_ENV,
     DEFAULT_SUBSTREAMS_ENDPOINT,
     DEFAULT_VERBOSE,
+    DEFAULT_METRICS_DISABLED
 } from "../src/constants.js";
 
 interface Package {
@@ -42,7 +43,8 @@ export function run(program: Command, pkg: Package) {
         .option('--cursor-file <string>', 'cursor lock file', DEFAULT_CURSOR_FILE)
         .option('--production-mode', 'Enable Production Mode, with high-speed parallel processing', DEFAULT_PRODUCTION_MODE)
         .option('--verbose', 'Enable verbose logging', DEFAULT_VERBOSE)
-        .option('--metrics-listen-address', 'If non-empty, the process will listen on this address for Prometheus metrics requests', DEFAULT_PROMETHEUS_ADDRESS)
-        .option('--metrics-listen-port', 'If non-empty, the process will listen on this port for Prometheus metrics requests', DEFAULT_PROMETHEUS_PORT.toString())
+        .option('--metrics-listen-address', 'The process will listen on this address for Prometheus metrics requests', DEFAULT_PROMETHEUS_ADDRESS)
+        .option('--metrics-listen-port', 'The process will listen on this port for Prometheus metrics requests', DEFAULT_PROMETHEUS_PORT.toString())
+        .option('--metrics-disabled', 'If set, will not send metrics to Prometheus', DEFAULT_METRICS_DISABLED)
         .option('-p, --params <string...>', 'Set a params for parameterizable modules. Can be specified multiple times. Ex: -p module1=valA -p module2=valX&valY', [])
 }

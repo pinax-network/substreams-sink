@@ -6,3 +6,4 @@ export const DEFAULT_PRODUCTION_MODE = false;
 export const DEFAULT_VERBOSE = false;
 export const DEFAULT_PROMETHEUS_ADDRESS = 'localhost';
 export const DEFAULT_PROMETHEUS_PORT = 9102;
+export const DEFAULT_METRICS_DISABLED = false;

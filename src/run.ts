@@ -1,9 +1,9 @@
 import * as fs from "node:fs";
 import { Substreams } from "substreams";
 import dotenv from "dotenv";
-import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE, DEFAULT_PROMETHEUS_ADDRESS, DEFAULT_PROMETHEUS_PORT } from "./constants.js";
+import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE, DEFAULT_PROMETHEUS_ADDRESS, DEFAULT_PROMETHEUS_PORT, DEFAULT_METRICS_DISABLED as DEFAULT_METRICS_DISABLED } from "./constants.js";
 import { logger } from "./logger.js";
-import { listen, updateMetrics } from "./prometheus.js";
+import { listen, updateBlockDataMetrics } from "./prometheus.js";
 dotenv.config();
 
 export interface RunOptions {
@@ -19,6 +19,7 @@ export interface RunOptions {
     verbose?: boolean,
     metricsListenAddress?: string,
     metricsListenPort?: number,
+    metricsDisabled?: boolean,
     params?: string[],
 }
 
@@ -34,7 +35,9 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     // Prometheus Metrics
     const metricsListenAddress = options.metricsListenAddress ?? DEFAULT_PROMETHEUS_ADDRESS;
     const metricsListenPort = options.metricsListenPort ?? DEFAULT_PROMETHEUS_PORT;
-    listen(metricsListenPort, metricsListenAddress);
+    const metricsDisabled = options.metricsDisabled ?? DEFAULT_METRICS_DISABLED;
+
+    if (!metricsDisabled) listen(metricsListenPort, metricsListenAddress);
 
     // Logger options
     if (verbose) logger.silent = false;
@@ -58,11 +61,11 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     });
 
     // inject params
-    for ( const param of options?.params ?? []) {
+    for (const param of options?.params ?? []) {
         const parts = param.split("=")
         const moduleName = parts[0]
         const value = param.replace(`${moduleName}=`, "");
-        logger.info("param", {moduleName, value});
+        logger.info("param", { moduleName, value });
         substreams.param(value, moduleName);
     }
 
@@ -73,10 +76,12 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     });
 
     // Metrics
-    if (metricsListenAddress && metricsListenPort) {
-        substreams.on("anyMessage", async message => {
-            await updateMetrics(message);
+    if (!metricsDisabled) {
+        substreams.on("block", block => {
+            updateBlockDataMetrics(block);
         });
+        substreams.on("progress", progress => { });
+        substreams.on("undo", undo => { });
     }
 
     return substreams;
