@@ -43,8 +43,8 @@ export function run(program: Command, pkg: Package) {
         .option('--cursor-file <string>', 'cursor lock file', DEFAULT_CURSOR_FILE)
         .option('--production-mode', 'Enable Production Mode, with high-speed parallel processing', DEFAULT_PRODUCTION_MODE)
         .option('--verbose', 'Enable verbose logging', DEFAULT_VERBOSE)
-        .option('--metrics-listen-address', 'The process will listen on this address for Prometheus metrics requests', DEFAULT_PROMETHEUS_ADDRESS)
-        .option('--metrics-listen-port', 'The process will listen on this port for Prometheus metrics requests', DEFAULT_PROMETHEUS_PORT.toString())
+        .option('--metrics-listen-address <string>', 'The process will listen on this address for Prometheus metrics requests', DEFAULT_PROMETHEUS_ADDRESS)
+        .option('--metrics-listen-port <int>', 'The process will listen on this port for Prometheus metrics requests', String(DEFAULT_PROMETHEUS_PORT))
         .option('--metrics-disabled', 'If set, will not send metrics to Prometheus', DEFAULT_METRICS_DISABLED)
         .option('-p, --params <string...>', 'Set a params for parameterizable modules. Can be specified multiple times. Ex: -p module1=valA -p module2=valX&valY', [])
 }
