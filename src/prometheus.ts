@@ -1,7 +1,7 @@
 import client, { Counter, Gauge } from "prom-client";
 import http from "node:http";
 import { logger } from "../index.js";
-import { BlockScopedData } from "substreams";
+import { BlockScopedData, Clock } from "substreams";
 
 // Prometheus Exporter
 export const register = new client.Registry();
@@ -41,8 +41,17 @@ export const substreamsSinkDataMessageSizeBytes = registerCounter("substreams_si
 // export const substreamsSinkProgressMessage = registerCounter("substreams_sink_progress_message", "The number of progress message received", ["module"]);
 
 // Gauges
+export const headBlockNumber = registerGauge("head_block_number", "Last processed block number");
+export const headBlockTimeDrift = registerGauge("head_block_time_drift", "Head block time drift in seconds");
 export const substreamsSinkBackprocessingCompletion = registerGauge("substreams_sink_backprocessing_completion", "Determines if backprocessing is completed, which is if we receive a first data message");
 // export const substreamsSinkProgressMessageLastEndBlock = registerGauge("substreams_sink_progress_message_last_end_block", "Latest progress reported processed range end block for each module, usually increments but due scheduling could make that fluctuates up/down", ["module"]);
+
+export function updateClockMetrics(clock: Clock) {
+    headBlockNumber?.set(Number(clock.number));
+    const seconds = Number(clock.timestamp?.seconds);
+    const _headBlockTimeDrift = Math.floor((new Date().valueOf() / 1000) - seconds);
+    headBlockTimeDrift?.set(_headBlockTimeDrift);
+}
 
 export function updateBlockDataMetrics(block: BlockScopedData) {
     substreamsSinkDataMessage?.inc(1);

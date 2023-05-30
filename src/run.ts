@@ -1,9 +1,9 @@
 import * as fs from "node:fs";
-import { BlockScopedData, Substreams } from "substreams";
+import { BlockScopedData, Clock, Substreams } from "substreams";
 import dotenv from "dotenv";
 import { DEFAULT_SUBSTREAMS_ENDPOINT, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_CURSOR_FILE, DEFAULT_PRODUCTION_MODE, DEFAULT_VERBOSE, DEFAULT_PROMETHEUS_ADDRESS, DEFAULT_PROMETHEUS_PORT, DEFAULT_METRICS_DISABLED as DEFAULT_METRICS_DISABLED } from "./constants.js";
 import { logger } from "./logger.js";
-import { listen, updateBlockDataMetrics } from "./prometheus.js";
+import { listen, updateBlockDataMetrics, updateClockMetrics } from "./prometheus.js";
 dotenv.config();
 
 export interface RunOptions {
@@ -77,6 +77,9 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
 
     // Metrics
     if (!metricsDisabled) {
+        substreams.on("clock", (clock: Clock) => {
+            updateClockMetrics(clock);
+        });
         substreams.on("block", (block: BlockScopedData) => {
             updateBlockDataMetrics(block);
         });
