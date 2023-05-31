@@ -1,10 +1,5 @@
 name: CI
-
 on: push
-
-permissions:
-  contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,15 +12,3 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test --if-present
-
-      - name: Release
-        if: startsWith(github.ref, 'refs/tags/')
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            *-x64
-            *-arm64
-            *-x64.exe
