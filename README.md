@@ -46,18 +46,29 @@ Arguments:
 Options:
   -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from (default:
                                           "https://mainnet.eth.streamingfast.io:443")
-  -s --start-block <int>                  Start block to stream from (defaults to -1, which means the initialBlock of the first module
-                                          you are streaming)
+  -s --start-block <int>                  Start block to stream from (defaults to -1, which means
+                                          the initialBlock of the first module you are streaming)
   -t --stop-block <string>                Stop block to end stream at, inclusively
   --substreams-api-token <string>         API token for the substream endpoint
-  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the substream endpoint (default:
-                                          "SUBSTREAMS_API_TOKEN")
-  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes,
-                                          can be used to perform to maintenance on the pod before actually letting it starts (default:
-                                          "0")
+  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the
+                                          substream endpoint (default: "SUBSTREAMS_API_TOKEN")
+  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait
+                                          before starting any internal processes, can be used to
+                                          perform to maintenance on the pod before actually
+                                          letting it starts (default: "0")
   --cursor-file <string>                  cursor lock file (default: "cursor.lock")
-  --production-mode                       Enable Production Mode, with high-speed parallel processing (default: false)
+  --production-mode                       Enable Production Mode, with high-speed parallel
+                                          processing (default: false)
   --verbose                               Enable verbose logging (default: false)
+  --metrics-listen-address <string>       The process will listen on this address for Prometheus
+                                          metrics requests (default: "localhost")
+  --metrics-listen-port <int>             The process will listen on this port for Prometheus
+                                          metrics requests (default: "9102")
+  --metrics-disabled                      If set, will not send metrics to Prometheus (default:
+                                          false)
+  -p, --params <string...>                Set a params for parameterizable modules. Can be
+                                          specified multiple times. Ex: -p module1=valA -p
+                                          module2=valX&valY (default: [])
   -h, --help                              display help for command
 ```
 
