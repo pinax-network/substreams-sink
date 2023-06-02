@@ -40,7 +40,7 @@ export function run(spkg: Uint8Array, outputModule: string, options: RunOptions 
     if (!metricsDisabled) listen(metricsListenPort, metricsListenAddress);
 
     // Logger options
-    if (verbose) logger.silent = false;
+    if (verbose) logger.settings.type = "pretty";
 
     // Required
     if (!outputModule) throw new Error('[output-module] is required');

@@ -6,7 +6,7 @@ const pkg = {
     version: '0.1.0',
     description: 'Substreams data to RabbitMQ',
 }
-logger.defaultMeta = { service: pkg.name };
+logger.settings.name = pkg.name;
 
 const program = cli.program(pkg);
 const command = cli.run(program, pkg);
@@ -28,12 +28,12 @@ async function action(manifest: string, moduleName: string, options: ActionOptio
     // Download Substreams (or read from local file system)
     const spkg = await download(manifest);
     const hash = createHash(spkg);
-    logger.info("download", {manifest, hash});
+    logger.info("download", { manifest, hash });
 
     // Handle custom Sink Options
     const { address, port, username, password } = options;
     const rabbitmq = `amqp://${username}:${password}@${address}:${port}`;
-    logger.info("connect", {rabbitmq});
+    logger.info("connect", { rabbitmq });
 
     // Run Substreams
     const substreams = run(spkg, moduleName, options);
