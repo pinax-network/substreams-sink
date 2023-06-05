@@ -1,6 +1,17 @@
 import { Logger, ILogObj } from "tslog";
 
-export const logger: Logger<ILogObj> = new Logger({
-  type: 'hidden',
-  name: 'substreams-sink'
-});
+class SinkLogger extends Logger<ILogObj> {
+  super() {
+    this.settings.type = "hidden";
+  }
+
+  public setName(name: string) {
+    this.settings.name = name;
+  }
+
+  public enable() {
+    this.settings.type = "pretty";
+  }
+}
+
+export const logger = new SinkLogger();
