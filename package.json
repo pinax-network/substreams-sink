@@ -2,8 +2,9 @@
     "name": "substreams-sink",
     "version": "0.4.0",
     "description": "Substreams Sink",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "type": "module",
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "repository": "git@github.com:pinax-network/substreams-sink.git",
     "keywords": [
         "substreams",
@@ -36,20 +37,19 @@
     ],
     "license": "MIT OR Apache-2.0",
     "scripts": {
-        "build": "tsup index.ts --dts",
-        "prepublishOnly": "npm run build"
+        "build": "tsc"
     },
     "dependencies": {
+        "@substreams/core": "^0.1.10",
+        "@substreams/node": "^0.1.2",
         "commander": "latest",
         "dotenv": "latest",
         "prom-client": "^14.2.0",
-        "substreams": "^0.7.2",
         "tslog": "latest"
     },
     "devDependencies": {
         "@tsconfig/recommended": "latest",
         "@types/node": "latest",
-        "tsup": "^6.7.0",
         "typescript": "latest"
     }
 }

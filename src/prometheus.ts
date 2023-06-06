@@ -1,7 +1,7 @@
 import client, { Counter, Gauge } from "prom-client";
 import http from "node:http";
-import { logger } from "../index.js";
-import { BlockScopedData, Clock } from "substreams";
+import type { BlockScopedData, Clock } from "@substreams/core/proto";
+import { logger } from "./logger.js";
 
 // Prometheus Exporter
 export const register = new client.Registry();

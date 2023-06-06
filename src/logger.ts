@@ -1,4 +1,4 @@
-import { Logger, ILogObj } from "tslog";
+import { Logger, type ILogObj } from "tslog";
 
 class SinkLogger extends Logger<ILogObj> {
   super() {
