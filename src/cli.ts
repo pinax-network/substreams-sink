@@ -24,7 +24,7 @@ export interface RunOptions {
 export const DEFAULT_SUBSTREAMS_API_TOKEN_ENV = "SUBSTREAMS_API_TOKEN";
 export const DEFAULT_CURSOR_FILE = "cursor.lock";
 export const DEFAULT_PRODUCTION_MODE = false;
-export const DEFAULT_VERBOSE = true;
+export const DEFAULT_VERBOSE = false;
 export const DEFAULT_PROMETHEUS_ADDRESS = "localhost";
 export const DEFAULT_PROMETHEUS_PORT = 9102;
 export const DEFAULT_METRICS_DISABLED = false;
@@ -49,8 +49,8 @@ export function option(program: Command, pkg: Package) {
         .showHelpAfterError()
         .description(pkg.description)
         .requiredOption("-e --substreams-endpoint <string>", "Substreams gRPC endpoint to stream data from")
-        .requiredOption("--manifest", "URL of Substreams package")
-        .requiredOption("--module-name", "Name of the output module (declared in the manifest)")
+        .requiredOption("--manifest <string>", "URL of Substreams package")
+        .requiredOption("--module-name <string>", "Name of the output module (declared in the manifest)")
         .option("-p, --params <string...>", "Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)", [])
         .option("-s --start-block <int>", "Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming)")
         .option("-t --stop-block <int>", "Stop block to end stream at, inclusively")

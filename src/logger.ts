@@ -1,7 +1,8 @@
 import { Logger, type ILogObj } from "tslog";
 
 class SinkLogger extends Logger<ILogObj> {
-  super() {
+  constructor() {
+    super();
     this.settings.type = "hidden";
   }
 
