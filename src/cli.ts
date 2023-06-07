@@ -1,13 +1,14 @@
 import { Command } from "commander";
 
 export interface RunOptions {
+    substreamsEndpoint: string;
+    manifest: string;
+    moduleName: string;
+    params: string[];
     startBlock?: string;
     stopBlock?: string;
-    substreamsEndpoint: string;
-    manifest?: string;
-    spkg?: string;
-    substreamsApiTokenEnvvar: string;
     substreamsApiToken?: string;
+    substreamsApiTokenEnvvar: string;
     delayBeforeStart?: number;
     cursorFile: string;
     productionMode: boolean;
@@ -15,9 +16,6 @@ export interface RunOptions {
     metricsListenAddress: string;
     metricsListenPort: number;
     metricsDisabled: boolean;
-    chain?: string;
-    params: string[];
-    moduleName?: string;
 }
 
 // default substreams options
