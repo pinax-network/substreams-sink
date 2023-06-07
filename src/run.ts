@@ -11,7 +11,7 @@ import {
     DEFAULT_VERBOSE,
     DEFAULT_PROMETHEUS_ADDRESS,
     DEFAULT_PROMETHEUS_PORT,
-    DEFAULT_METRICS_DISABLED as DEFAULT_METRICS_DISABLED,
+    DEFAULT_METRICS_DISABLED,
     type RunOptions,
 } from "./cli.js";
 import { logger } from "./logger.js";
