@@ -59,7 +59,7 @@ export function run(substreamPackage: Package, options: RunOptions) {
     const request = createRequest({
         substreamPackage,
         outputModule: moduleName!,
-        startBlockNum: startBlock as any,
+        startBlockNum: startBlock ?? '-1' as any,
         stopBlockNum: stopBlock as any,
         productionMode: productionMode,
         startCursor,

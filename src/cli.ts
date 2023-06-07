@@ -8,7 +8,7 @@ export interface RunOptions {
     spkg?: string;
     substreamsApiTokenEnvvar: string;
     substreamsApiToken?: string;
-    delayBeforeStart?: string;
+    delayBeforeStart?: number;
     cursorFile: string;
     productionMode: boolean;
     verbose: boolean;
@@ -56,7 +56,7 @@ export function option(program: Command, pkg: Package) {
         .option("-t --stop-block <int>", "Stop block to end stream at, inclusively")
         .option("--substreams-api-token <string>", "API token for the substream endpoint")
         .option("--substreams-api-token-envvar <string>", "Environnement variable name of the API token for the substream endpoint", DEFAULT_SUBSTREAMS_API_TOKEN_ENV)
-        .option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts", "0")
+        .option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts")
         .option("--cursor-file <string>", "cursor lock file", DEFAULT_CURSOR_FILE)
         .option("--production-mode", "Enable Production Mode, with high-speed parallel processing", DEFAULT_PRODUCTION_MODE)
         .option("--verbose", "Enable verbose logging", DEFAULT_VERBOSE)
