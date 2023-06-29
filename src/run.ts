@@ -68,6 +68,10 @@ export function run(substreamPackage: Package, options: RunOptions) {
     // Block Emitter
     const emitter = new BlockEmitter(transport, request, registry);
 
+    emitter.on("cursor", (cursor, _) => {
+        fs.writeFileSync(cursorFile, cursor, "utf-8");
+    });
+
     // Metrics
     if (!metricsDisabled) {
         emitter.on("block", (block: BlockScopedData) => {
