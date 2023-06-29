@@ -29,7 +29,7 @@ export function run(substreamPackage: Package, options: RunOptions) {
     // Auth
     const substreamsApiTokenEnvvar = options.substreamsApiTokenEnvvar ?? DEFAULT_SUBSTREAMS_API_TOKEN_ENV;
     const substreamsApiToken = options.substreamsApiToken ?? process ? process.env[substreamsApiTokenEnvvar] : '';
-    if (!substreamsApiToken) throw new Error('[substreams-api-token] is required');
+    // if (!substreamsApiToken) throw new Error('[substreams-api-token] is required');
 
     // Read cursor file
     const cursorFile = options.cursorFile ?? DEFAULT_CURSOR_FILE;
@@ -55,7 +55,7 @@ export function run(substreamPackage: Package, options: RunOptions) {
 
     // Connect Transport
     const registry = createRegistry(substreamPackage);
-    const transport = createDefaultTransport(substreamsEndpoint, substreamsApiToken, registry);
+    const transport = createDefaultTransport(substreamsEndpoint, substreamsApiToken as string, registry);
     const request = createRequest({
         substreamPackage,
         outputModule: moduleName!,
