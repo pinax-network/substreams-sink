@@ -34,7 +34,7 @@ function registerGauge(name: string, help = "help", labelNames: string[] = []): 
 
 // Counters
 // export const substreamsSinkMessageSizeBytes = registerCounter("substreams_sink_message_size_bytes", "The number of total bytes of message received from the Substreams backend");
-// export const substreamsSinkError = registerCounter("substreams_sink_error", "The error count we encountered when interacting with Substreams for which we had to restart the connection loop");
+export const substreamsSinkError = registerCounter("substreams_sink_error", "The error count we encountered when interacting with Substreams for which we had to restart the connection loop");
 export const substreamsSinkDataMessage = registerCounter("substreams_sink_data_message", "The number of data message received");
 export const substreamsSinkDataMessageSizeBytes = registerCounter("substreams_sink_data_message_size_bytes", "The total size of in bytes of all data message received");
 // export const substreamsSinkUndoMessage = registerCounter("substreams_sink_undo_message", "The number of block undo message received");

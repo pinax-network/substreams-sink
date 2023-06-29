@@ -15,11 +15,11 @@ import {
     type RunOptions,
 } from "./cli.js";
 import { logger } from "./logger.js";
-import { listen, updateBlockDataMetrics, updateClockMetrics } from "./prometheus.js";
+import { listen, updateBlockDataMetrics, updateClockMetrics, substreamsSinkError } from "./prometheus.js";
 
 dotenv.config();
 
-export function run(substreamPackage: Package, options: RunOptions) {
+export function init(substreamPackage: Package, options: RunOptions) {
     if (!substreamPackage.modules) throw new Error("Unable to create Substream Package");
 
     // Required
@@ -81,4 +81,15 @@ export function run(substreamPackage: Package, options: RunOptions) {
     }
 
     return emitter;
+}
+
+export async function start(emitter: BlockEmitter, options: RunOptions) {
+    try {
+        await emitter.start(options.delayBeforeStart);
+    } catch (error) {
+        logger.error(error);
+        substreamsSinkError?.inc(1);
+        if (options.autoRestart)
+            await start(emitter, options);
+    }
 }

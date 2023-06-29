@@ -16,6 +16,7 @@ export interface RunOptions {
     metricsListenAddress: string;
     metricsListenPort: number;
     metricsDisabled: boolean;
+    autoRestart: boolean;
 }
 
 // default substreams options
@@ -26,6 +27,7 @@ export const DEFAULT_VERBOSE = false;
 export const DEFAULT_PROMETHEUS_ADDRESS = "localhost";
 export const DEFAULT_PROMETHEUS_PORT = 9102;
 export const DEFAULT_METRICS_DISABLED = false;
+export const DEFAULT_AUTO_RESTART = false;
 
 interface Package {
     name: string;
@@ -60,5 +62,6 @@ export function option(program: Command, pkg: Package) {
         .option("--verbose", "Enable verbose logging", DEFAULT_VERBOSE)
         .option("--metrics-listen-address <string>", "The process will listen on this address for Prometheus metrics requests", DEFAULT_PROMETHEUS_ADDRESS)
         .option("--metrics-listen-port <int>", "The process will listen on this port for Prometheus metrics requests", String(DEFAULT_PROMETHEUS_PORT))
-        .option("--metrics-disabled", "If set, will not send metrics to Prometheus", DEFAULT_METRICS_DISABLED);
+        .option("--metrics-disabled", "If set, will not send metrics to Prometheus", DEFAULT_METRICS_DISABLED)
+        .option("--auto-restart", "If set, the sink will restart on error", DEFAULT_AUTO_RESTART);
 }
