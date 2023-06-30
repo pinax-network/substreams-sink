@@ -23,7 +23,7 @@ command.action(async (options: commander.RunOptions) => {
 
   // Configure logging with TSLog
   logger.setName(pkg.name);
-  if ( verbose ) logger.enable();
+  if (verbose) logger.enable();
 
   // Read Substream
   const substreamPackage = await fetchSubstream(manifest);
