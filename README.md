@@ -26,13 +26,9 @@ npm install substreams-sink
 
 - [x] includes [Commander.js](https://github.com/tj/commander.js/) helper CLI
 - [x] includes [tslog](https://github.com/fullstack-build/tslog) helper logger
-- [x] includes **Substreams** `init()` and `start()` helper methods & `RunOptions` interface
 - [x] handle reading/saving **Substreams** `cursor.lock` file
-- [x] reads `SUBSTREAMS_API_TOKEN` from `.env` file
-- [x] includes `--verbose` flag
-- [x] includes `--production-mode` flag
-- [x] includes `--auto-restart` flag
-- [x] Prometheus metrics
+- [x] reads config `.env` file
+- [x] includes Prometheus metrics helpers
 
 ### CLI
 
