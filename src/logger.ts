@@ -4,6 +4,7 @@ class SinkLogger extends Logger<ILogObj> {
   constructor() {
     super();
     this.disable();
+    this.setName("substreams-sink");
   }
 
   public setName(name: string) {
@@ -11,7 +12,7 @@ class SinkLogger extends Logger<ILogObj> {
   }
 
   public enable() {
-    this.settings.type = "pretty";
+    this.settings.type = "json";
     this.settings.minLevel = 0;
   }
 

@@ -1,4 +1,5 @@
-export * as cli from "./src/cli.js";
-export * from "./src/run.js";
-export * from "./src/logger.js";
-export { register } from "./src/prometheus.js";
+export * as commander from "./src/commander.js";
+export * as prometheus from "./src/prometheus.js";
+export * as cursor from "./src/cursor.js";
+export * as config from "./src/config.js";
+export { logger } from "./src/logger.js";
