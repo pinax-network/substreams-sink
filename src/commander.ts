@@ -19,9 +19,8 @@ export interface RunOptions {
     delayBeforeStart?: number;
     cursorFile: string;
     disableProductionMode?: boolean;
-    verbose?: boolean;
-    autoRestart?: boolean;
     restartInactivitySeconds?: number;
+    verbose?: boolean;
 }
 
 export function program(pkg: Package) {
@@ -48,6 +47,6 @@ export function run(program: Command, pkg: Package) {
         .option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts")
         .option("--cursor-file <string>", `cursor lock file (ex: ${DEFAULT_CURSOR_FILE})`)
         .option("--disable-production-mode", "Disable production mode, allows debugging modules logs, stops high-speed parallel processing")
+        .option("--restart-inactivity-seconds <int>", `If set, the sink will restart when inactive for over a certain amount of seconds (ex: ${DEFAULT_RESTART_INACTIVITY_SECONDS})`)
         .option("--verbose", "Enable verbose logging")
-        .option("--restart-inactivity-seconds", `If set, the sink will restart when inactive for over a certain amount of seconds (ex: ${DEFAULT_RESTART_INACTIVITY_SECONDS})`)
 }
