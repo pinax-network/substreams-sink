@@ -68,9 +68,9 @@ Options:
 
 ```js
 import pkg from "./package.json" assert { type: "json" };
-import { createRegistry, createRequest, fetchSubstream } from "@substreams/core";
+import { applyParams, createRegistry, createRequest, fetchSubstream } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
-import { prometheus, logger, commander, cursor, config } from "@substreams/sink";
+import { prometheus, logger, commander, cursor, config } from "./index.js";
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
@@ -89,6 +89,7 @@ command.action(async (options: commander.RunOptions) => {
   const stopBlockNum = config.getStopBlock(options);
   const cursorFile = config.getCursorFile(options);
   const verbose = config.getVerbose(options);
+  const params = config.getParams(options);
 
   // Configure logging with TSLog
   logger.setName(pkg.name);
@@ -96,6 +97,9 @@ command.action(async (options: commander.RunOptions) => {
 
   // Read Substream
   const substreamPackage = await fetchSubstream(manifest);
+
+  // Apply params
+  if (params.length) applyParams(params, substreamPackage.modules?.modules || []);
 
   // Connect Transport
   const registry = createRegistry(substreamPackage);

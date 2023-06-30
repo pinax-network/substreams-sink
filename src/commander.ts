@@ -8,19 +8,20 @@ export interface Package {
 }
 
 export interface RunOptions {
-    substreamsEndpoint: string;
-    manifest: string;
-    moduleName: string;
-    params: string[];
+    substreamsEndpoint?: string;
+    manifest?: string;
+    moduleName?: string;
+    params?: string[];
     startBlock?: string;
     stopBlock?: string;
     substreamsApiToken?: string;
-    substreamsApiTokenEnvvar: string;
+    substreamsApiTokenEnvvar?: string;
     delayBeforeStart?: number;
-    cursorFile: string;
+    cursorFile?: string;
     disableProductionMode?: boolean;
-    restartInactivitySeconds?: number;
     verbose?: boolean;
+    autoRestart?: boolean;
+    restartInactivitySeconds?: number;
 }
 
 export function program(pkg: Package) {

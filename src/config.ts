@@ -27,6 +27,7 @@ export const MODULE_NAME = process.env.MODULE_NAME;
 export const OUTPUT_MODULE = process.env.OUTPUT_MODULE; // fallback envvar for OUTPUT_MODULE
 export const START_BLOCK = process.env.START_BLOCK;
 export const STOP_BLOCK = process.env.STOP_BLOCK;
+export const PARAMS = process.env.PARAMS;
 
 // helpers
 export function getToken(options: {substreamsApiToken?: string, substreamsApiTokenEnvvar?: string} = {}) {
@@ -66,4 +67,8 @@ export function getCursorFile(options: {cursorFile?: string} = {}) {
 
 export function getVerbose(options: {verbose?: boolean} = {}) {
     return options.verbose ?? VERBOSE;
+}
+
+export function getParams(options: {params?: string[]} = {}) {
+    return options.params ?? PARAMS?.split(",") ?? [];
 }

@@ -58,7 +58,7 @@ function updateBlockDataMetrics(block: BlockScopedData) {
 
 export function onPrometheusMetrics(emitter: BlockEmitter) {
     emitter.on("undo", () => substreams_sink_undo_message?.inc(1));
-    emitter.on("block", (block: BlockScopedData) => {
+    emitter.on("block", block => {
         updateBlockDataMetrics(block);
         if (block.clock) updateClockMetrics(block.clock);
     });
