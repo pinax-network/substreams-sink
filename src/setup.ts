@@ -6,7 +6,7 @@ import * as config from "./config.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 
-export async function setup(options: RunOptions, pkg: { name: string }) {
+export async function setup(options: RunOptions = {}, pkg: { name: string }) {
     // Configure logging with TSLog
     const verbose = config.getVerbose(options);
     if (verbose) logger.enable();
@@ -47,7 +47,6 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const emitter = new BlockEmitter(transport, request, registry);
 
     // Handle Prometheus Metrics
-    if (!options.disableMetrics) { /*listen*/ }
     prometheus.onPrometheusMetrics(emitter);
 
     // Save new cursor on each new block emitted

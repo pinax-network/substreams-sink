@@ -1,8 +1,6 @@
 import "dotenv/config";
 
 // default options
-export const DEFAULT_METRICS_LISTEN_ADDRESS = "localhost";
-export const DEFAULT_METRICS_LISTEN_PORT = 9102;
 export const DEFAULT_HOSTNAME = "localhost";
 export const DEFAULT_PORT = 9102;
 export const DEFAULT_SUBSTREAMS_API_TOKEN_ENV = "SUBSTREAMS_API_TOKEN";
@@ -10,17 +8,12 @@ export const DEFAULT_CURSOR_FILE = "cursor.lock";
 export const DEFAULT_VERBOSE = false;
 export const DEFAULT_RESTART_INACTIVITY_SECONDS = 60;
 export const DEFAULT_DISABLE_PRODUCTION_MODE = false;
-export const DEFAULT_DISABLE_METRICS = true;
 export const DEFAULT_DELAY_BEFORE_START = 0;
 export const DEFAULT_SUBSTREAMS_ENDPOINT = "https://mainnet.eth.streamingfast.io:443";
 
 // optional
-export const METRICS_LISTEN_ADDRESS = process.env.METRICS_LISTEN_ADDRESS ?? DEFAULT_METRICS_LISTEN_ADDRESS;
-export const METRICS_LISTEN_PORT = parseInt(process.env.METRICS_LISTEN_PORT ?? String(DEFAULT_METRICS_LISTEN_PORT));
-
 export const HOSTNAME = process.env.HOSTNAME ?? DEFAULT_HOSTNAME;
 export const PORT = parseInt(process.env.PORT ?? String(DEFAULT_PORT));
-export const DISABLE_METRICS = JSON.parse(process.env.DISABLE_METRICS ?? String(DEFAULT_DISABLE_METRICS)) as boolean;
 export const VERBOSE = JSON.parse(process.env.VERBOSE ?? String(DEFAULT_VERBOSE)) as boolean;
 export const DISABLE_PRODUCTION_MODE = JSON.parse(process.env.DISABLE_PRODUCTION_MODE ?? String(DEFAULT_DISABLE_PRODUCTION_MODE)) as boolean;
 export const DELAY_BEFORE_START = parseInt(process.env.DELAY_BEFORE_START ?? String(DEFAULT_DELAY_BEFORE_START));
@@ -79,10 +72,10 @@ export function getParams(options: { params?: string[] } = {}) {
     return options.params ?? PARAMS?.split(",") ?? [];
 }
 
-export function getHostname(options: {hostname?: string} = {}) {
+export function getHostname(options: { hostname?: string } = {}) {
     return options.hostname ?? HOSTNAME;
 }
 
-export function getPort(options: {port?: number} = {}) {
+export function getPort(options: { port?: number } = {}) {
     return options.port ?? PORT;
 }
