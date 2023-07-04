@@ -42,6 +42,7 @@
     },
     "dependencies": {
         "@substreams/core": "^0.1.10",
+        "@substreams/manifest": "^0.0.4",
         "@substreams/node": "^0.1.3",
         "commander": "latest",
         "dotenv": "latest",

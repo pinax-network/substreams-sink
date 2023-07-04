@@ -1,5 +1,7 @@
+import fs from "node:fs";
 import { createRegistry, createRequest, fetchSubstream, applyParams } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
+import { readPackage } from "@substreams/manifest";
 import type { RunOptions } from "./commander.js";
 import * as cursor from "./cursor.js";
 import * as config from "./config.js";
@@ -14,7 +16,7 @@ export async function setup(options: RunOptions = {}, pkg: { name: string }) {
 
     // Download Substream package
     const manifest = config.getManifest(options);
-    const substreamPackage = await fetchSubstream(manifest);
+    const substreamPackage = fs.existsSync(manifest) ? await readPackage(manifest) : await fetchSubstream(manifest);
 
     // auth API token
     // https://app.streamingfast.io/
