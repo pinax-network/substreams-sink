@@ -1,5 +1,6 @@
 import pkg from "./package.json" assert { type: "json" };
 import { logger, commander, setup } from "./index.js";
+import { listen } from "./src/http";
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
@@ -15,6 +16,9 @@ command.action(async (options: commander.RunOptions) => {
     logger.info(cursor);
     logger.info(clock);
   });
+
+  // Setup HTTP server & Prometheus metrics
+  listen(options, pkg);
 
   // Start streaming
   emitter.start();

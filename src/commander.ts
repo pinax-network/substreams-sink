@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { DEFAULT_CURSOR_FILE, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_METRICS_LISTEN_ADDRESS, DEFAULT_METRICS_LISTEN_PORT, DEFAULT_DISABLE_METRICS } from "./config.js";
+import { DEFAULT_CURSOR_FILE, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_METRICS_LISTEN_ADDRESS, DEFAULT_METRICS_LISTEN_PORT, DEFAULT_DISABLE_METRICS, DEFAULT_HOSTNAME, DEFAULT_PORT } from "./config.js";
 
 export interface Package {
     name: string;
@@ -22,6 +22,8 @@ export interface RunOptions {
     restartInactivitySeconds?: number;
     metricsListenAddress?: string;
     metricsListenPort?: number;
+    hostname?: string;
+    port?: number;
     disableMetrics?: boolean;
     verbose?: boolean;
 }
@@ -51,8 +53,12 @@ export function run(program: Command, pkg: Package) {
         .option("--cursor-file <string>", `cursor lock file (ex: ${DEFAULT_CURSOR_FILE})`)
         .option("--disable-production-mode", "Disable production mode, allows debugging modules logs, stops high-speed parallel processing")
         .option("--restart-inactivity-seconds <int>", `If set, the sink will restart when inactive for over a certain amount of seconds (ex: ${DEFAULT_RESTART_INACTIVITY_SECONDS})`)
+        .option(`--hostname <string>", "The process will listen on this hostname for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_HOSTNAME})`)
+        .option(`--port <int>", "The process will listen on this port for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_PORT})`)
+        .option("--verbose", "Enable verbose logging")
+
+        // to remove in favour of hostname/port
         .option("--metrics-listen-address <string>", "The process will listen on this address for Prometheus metrics requests", DEFAULT_METRICS_LISTEN_ADDRESS)
         .option("--metrics-listen-port <int>", "The process will listen on this port for Prometheus metrics requests", String(DEFAULT_METRICS_LISTEN_PORT))
         .option("--disable-metrics", "If set, will not send metrics to Prometheus", DEFAULT_DISABLE_METRICS)
-        .option("--verbose", "Enable verbose logging")
 }
