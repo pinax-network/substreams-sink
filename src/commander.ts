@@ -20,7 +20,6 @@ export interface RunOptions {
     cursorFile?: string;
     disableProductionMode?: boolean;
     verbose?: boolean;
-    autoRestart?: boolean;
     restartInactivitySeconds?: number;
 }
 
