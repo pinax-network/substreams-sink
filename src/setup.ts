@@ -29,7 +29,7 @@ export async function setup(options: RunOptions = {}, pkg: { name: string }) {
     const cursorFile = config.getCursorFile(options);
 
     // Apply params
-    if (params.length) applyParams(params, substreamPackage.modules.modules);
+    if (params.length) applyParams(params, substreamPackage.modules!.modules);
 
     // Connect Transport
     const registry = createRegistry(substreamPackage);
