@@ -12,3 +12,4 @@ data
 build
 *.lock
 !example.js
+.env
