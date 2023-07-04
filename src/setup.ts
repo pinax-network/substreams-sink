@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, fetchSubstream } from "@substreams/core";
+import { createRegistry, createRequest, fetchSubstream, applyParams } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import type { RunOptions } from "./commander.js";
 import * as cursor from "./cursor.js";
@@ -6,7 +6,7 @@ import * as config from "./config.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 
-export async function setup(options: RunOptions = {}, pkg: {name: string}) {
+export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
     const verbose = config.getVerbose(options);
     if (verbose) logger.enable();
@@ -25,7 +25,11 @@ export async function setup(options: RunOptions = {}, pkg: {name: string}) {
     const outputModule = config.getModuleName(options);
     const startBlockNum = config.getStartBlock(options);
     const stopBlockNum = config.getStopBlock(options);
+    const params = config.getParams(options);
     const cursorFile = config.getCursorFile(options);
+
+    // Apply params
+    if (params.length) applyParams(params, substreamPackage.modules.modules);
 
     // Connect Transport
     const registry = createRegistry(substreamPackage);
@@ -35,7 +39,7 @@ export async function setup(options: RunOptions = {}, pkg: {name: string}) {
         outputModule,
         startBlockNum,
         stopBlockNum,
-        productionMode: true,
+        productionMode: !options.disableProductionMode,
         startCursor: cursor.readCursor(cursorFile),
     });
 
@@ -43,6 +47,7 @@ export async function setup(options: RunOptions = {}, pkg: {name: string}) {
     const emitter = new BlockEmitter(transport, request, registry);
 
     // Handle Prometheus Metrics
+    if (!options.disableMetrics) { /*listen*/ }
     prometheus.onPrometheusMetrics(emitter);
 
     // Save new cursor on each new block emitted
