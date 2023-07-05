@@ -50,7 +50,7 @@ export function run(program: Command, pkg: Package) {
         .option("--cursor-file <string>", `cursor lock file (ex: ${DEFAULT_CURSOR_FILE})`)
         .option("--disable-production-mode", "Disable production mode, allows debugging modules logs, stops high-speed parallel processing")
         .option("--restart-inactivity-seconds <int>", `If set, the sink will restart when inactive for over a certain amount of seconds (ex: ${DEFAULT_RESTART_INACTIVITY_SECONDS})`)
-        .option(`--hostname <string>", "The process will listen on this hostname for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_HOSTNAME})`)
-        .option(`--port <int>", "The process will listen on this port for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_PORT})`)
+        .option("--hostname <string>", `The process will listen on this hostname for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_HOSTNAME})`)
+        .option("--port <int>", `The process will listen on this port for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_PORT})`)
         .option("--verbose", "Enable verbose logging")
 }
