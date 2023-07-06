@@ -32,7 +32,7 @@ export const PARAMS = process.env.PARAMS;
 export function getToken(options: { substreamsApiToken?: string, substreamsApiTokenEnvvar?: string } = {}) {
     const substreamsApiTokenEnvvar = options.substreamsApiTokenEnvvar ?? SUBSTREAMS_API_TOKEN_ENVVAR;
     const token = options.substreamsApiToken ?? SUBSTREAMS_API_TOKEN ?? process.env[substreamsApiTokenEnvvar || ""];
-    if (!token) throw new Error("SUBSTREAMS_API_TOKEN is require");
+    // if (!token) throw new Error("SUBSTREAMS_API_TOKEN is required");
     return token;
 }
 
@@ -48,7 +48,7 @@ export function getManifest(options: { manifest?: string } = {}) {
 
 export function getModuleName(options: { moduleName?: string } = {}) {
     const moduleName = options.moduleName ?? MODULE_NAME ?? OUTPUT_MODULE;
-    if (!moduleName) throw new Error("MODULE_NAME or OUTPUT_MODULE is require");
+    if (!moduleName) throw new Error("MODULE_NAME or OUTPUT_MODULE is required");
     return moduleName;
 }
 
