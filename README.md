@@ -60,7 +60,7 @@ Options:
 
 ```js
 import pkg from "./package.json" assert { type: "json" };
-import { commander, setup, prometheus } from "substreams-sink";
+import { commander, setup, prometheus } from "./index.js";
 import { listen } from "./src/http";
 
 // Setup CLI using Commander
@@ -77,16 +77,15 @@ command.action(async (options: commander.RunOptions) => {
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
     customCounter?.inc(1);
-    console.log(message );
+    console.log(message);
     console.log(cursor);
     console.log(clock);
   });
 
   // Setup HTTP server & Prometheus metrics
-  listen(options, pkg);
+  listen(options);
 
   // Start streaming
   emitter.start();
 })
-program.parse();
 ```
