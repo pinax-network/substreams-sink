@@ -8,7 +8,7 @@ import * as config from "./config.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 
-export async function setup(options: RunOptions = {}, pkg: { name: string }) {
+export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
     const verbose = config.getVerbose(options);
     if (verbose) logger.enable();
@@ -16,7 +16,7 @@ export async function setup(options: RunOptions = {}, pkg: { name: string }) {
 
     // Download Substream package
     const manifest = config.getManifest(options);
-    const substreamPackage = fs.existsSync(manifest) ? await readPackage(manifest) : await fetchSubstream(manifest);
+    const substreamPackage = fs.existsSync(manifest!) ? await readPackage(manifest!) : await fetchSubstream(manifest!);
 
     // auth API token
     // https://app.streamingfast.io/
@@ -37,10 +37,10 @@ export async function setup(options: RunOptions = {}, pkg: { name: string }) {
 
     // Connect Transport
     const registry = createRegistry(substreamPackage);
-    const transport = createDefaultTransport(baseUrl, token, registry);
+    const transport = createDefaultTransport(baseUrl!, token, registry);
     const request = createRequest({
         substreamPackage,
-        outputModule,
+        outputModule: outputModule!,
         startBlockNum,
         stopBlockNum,
         productionMode: !options.disableProductionMode,

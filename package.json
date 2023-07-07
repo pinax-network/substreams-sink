@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink",
-    "version": "0.6.2",
+    "version": "0.6.3",
     "description": "Substreams Sink",
     "type": "module",
     "exports": "./dist/index.js",

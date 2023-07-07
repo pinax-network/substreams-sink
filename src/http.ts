@@ -10,7 +10,7 @@ export const server = http.createServer(async (req, res) => {
     res.end(await registry.metrics());
 });
 
-export async function listen(options: RunOptions = {}, pkg: {name: string, version: string, description: string}) {
+export async function listen(options: RunOptions) {
     const hostname = getHostname(options);
     const port = getPort(options);
     return new Promise(resolve => {

@@ -9,7 +9,6 @@ export const DEFAULT_VERBOSE = false;
 export const DEFAULT_RESTART_INACTIVITY_SECONDS = 60;
 export const DEFAULT_DISABLE_PRODUCTION_MODE = false;
 export const DEFAULT_DELAY_BEFORE_START = 0;
-export const DEFAULT_SUBSTREAMS_ENDPOINT = "https://mainnet.eth.streamingfast.io:443";
 
 // optional
 export const HOSTNAME = process.env.HOSTNAME ?? DEFAULT_HOSTNAME;
@@ -20,7 +19,7 @@ export const DELAY_BEFORE_START = parseInt(process.env.DELAY_BEFORE_START ?? Str
 export const CURSOR_FILE = process.env.CURSOR_FILE ?? DEFAULT_CURSOR_FILE;
 export const SUBSTREAMS_API_TOKEN = process.env.SUBSTREAMS_API_TOKEN;
 export const SUBSTREAMS_API_TOKEN_ENVVAR = process.env.SUBSTREAMS_API_TOKEN_ENVVAR ?? DEFAULT_SUBSTREAMS_API_TOKEN_ENV;
-export const SUBSTREAMS_ENDPOINT = process.env.SUBSTREAMS_ENDPOINT ?? DEFAULT_SUBSTREAMS_ENDPOINT;
+export const SUBSTREAMS_ENDPOINT = process.env.SUBSTREAMS_ENDPOINT;
 export const MANIFEST = process.env.MANIFEST;
 export const MODULE_NAME = process.env.MODULE_NAME;
 export const OUTPUT_MODULE = process.env.OUTPUT_MODULE; // fallback envvar for OUTPUT_MODULE
@@ -31,7 +30,7 @@ export const PARAMS = process.env.PARAMS;
 // helpers
 export function getToken(options: { substreamsApiToken?: string, substreamsApiTokenEnvvar?: string } = {}) {
     const substreamsApiTokenEnvvar = options.substreamsApiTokenEnvvar ?? SUBSTREAMS_API_TOKEN_ENVVAR;
-    const token = options.substreamsApiToken ?? SUBSTREAMS_API_TOKEN ?? process.env[substreamsApiTokenEnvvar || ""];
+    const token = options.substreamsApiToken ?? SUBSTREAMS_API_TOKEN ?? process.env[substreamsApiTokenEnvvar] ?? "";
     // if (!token) throw new Error("SUBSTREAMS_API_TOKEN is required");
     return token;
 }
@@ -42,13 +41,13 @@ export function getBaseUrl(options: { substreamsEndpoint?: string } = {}) {
 
 export function getManifest(options: { manifest?: string } = {}) {
     const manifest = options.manifest ?? MANIFEST;
-    if (!manifest) throw new Error("MANIFEST is require");
+    // if (!manifest) throw new Error("MANIFEST is require");
     return manifest;
 }
 
 export function getModuleName(options: { moduleName?: string } = {}) {
     const moduleName = options.moduleName ?? MODULE_NAME ?? OUTPUT_MODULE;
-    if (!moduleName) throw new Error("MODULE_NAME or OUTPUT_MODULE is required");
+    // if (!moduleName) throw new Error("MODULE_NAME or OUTPUT_MODULE is required");
     return moduleName;
 }
 
