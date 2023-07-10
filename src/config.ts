@@ -29,9 +29,13 @@ export const PARAMS = process.env.PARAMS;
 
 // helpers
 export function getToken(options: { substreamsApiToken?: string, substreamsApiTokenEnvvar?: string } = {}) {
-    const substreamsApiTokenEnvvar = options.substreamsApiTokenEnvvar ?? SUBSTREAMS_API_TOKEN_ENVVAR;
-    const token = options.substreamsApiToken ?? SUBSTREAMS_API_TOKEN ?? process.env[substreamsApiTokenEnvvar] ?? "";
-    // if (!token) throw new Error("SUBSTREAMS_API_TOKEN is required");
+    // CLI priority
+    let token = options.substreamsApiToken;
+    if ( !token && options.substreamsApiTokenEnvvar ) token = process.env[options.substreamsApiTokenEnvvar];
+
+    // .env secondary
+    if (!token) token = SUBSTREAMS_API_TOKEN;
+    if (!token) token = process.env[SUBSTREAMS_API_TOKEN_ENVVAR];
     return token;
 }
 
