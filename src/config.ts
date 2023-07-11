@@ -9,6 +9,7 @@ export const DEFAULT_VERBOSE = false;
 export const DEFAULT_RESTART_INACTIVITY_SECONDS = 60;
 export const DEFAULT_PRODUCTION_MODE = true;
 export const DEFAULT_DELAY_BEFORE_START = 0;
+export const DEFAULT_METRICS_LABELS = {};
 
 // optional
 export const HOSTNAME = process.env.HOSTNAME ?? DEFAULT_HOSTNAME;
@@ -17,6 +18,7 @@ export const VERBOSE = JSON.parse(process.env.VERBOSE ?? String(DEFAULT_VERBOSE)
 export const PRODUCTION_MODE = JSON.parse(process.env.PRODUCTION_MODE ?? String(DEFAULT_PRODUCTION_MODE)) as boolean;
 export const DELAY_BEFORE_START = parseInt(process.env.DELAY_BEFORE_START ?? String(DEFAULT_DELAY_BEFORE_START));
 export const CURSOR_FILE = process.env.CURSOR_FILE ?? DEFAULT_CURSOR_FILE;
+export const METRICS_LABELS = process.env.METRICS_LABELS ?? DEFAULT_METRICS_LABELS;
 export const SUBSTREAMS_API_TOKEN = process.env.SUBSTREAMS_API_TOKEN;
 export const SUBSTREAMS_API_TOKEN_ENVVAR = process.env.SUBSTREAMS_API_TOKEN_ENVVAR ?? DEFAULT_SUBSTREAMS_API_TOKEN_ENV;
 export const SUBSTREAMS_ENDPOINT = process.env.SUBSTREAMS_ENDPOINT;
@@ -85,10 +87,14 @@ export function getPort(options: { port?: number } = {}) {
     return options.port ?? PORT;
 }
 
+export function getMetricsLabels(options: { metricsLabels?: string[] } = {}) {
+    return options.metricsLabels ?? METRICS_LABELS;
+}
+
 export function getProductionMode(options: { disableProductionMode?: boolean } = {}) {
     return options.disableProductionMode ?? PRODUCTION_MODE;
 }
 
 export function getDelayBeforeStart(options: { delayBeforeStart?: number } = {}) {
-    return options.delayBeforeStart ?? DEFAULT_DELAY_BEFORE_START;
+    return options.delayBeforeStart ?? DELAY_BEFORE_START;
 }

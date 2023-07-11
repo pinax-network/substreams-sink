@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { DEFAULT_CURSOR_FILE, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_HOSTNAME, DEFAULT_PORT } from "./config.js";
+import { DEFAULT_CURSOR_FILE, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_SUBSTREAMS_API_TOKEN_ENV, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS } from "./config.js";
 
 export interface Package {
     name: string;
@@ -22,6 +22,7 @@ export interface RunOptions {
     restartInactivitySeconds?: number;
     hostname?: string;
     port?: number;
+    metricsLabels?: string[];
     verbose?: boolean;
 }
 
@@ -32,6 +33,11 @@ export function program(pkg: Package) {
     program.command("help").description("Display help for command");
     program.showHelpAfterError();
     return program;
+}
+
+function handleMetricsLabels(value: string, previous: {}) {
+    const params = new URLSearchParams(value);
+    return { ...previous, ...Object.fromEntries(params) };
 }
 
 export function run(program: Command, pkg: Package) {
@@ -52,5 +58,6 @@ export function run(program: Command, pkg: Package) {
         .option("--restart-inactivity-seconds <int>", `If set, the sink will restart when inactive for over a certain amount of seconds (ex: ${DEFAULT_RESTART_INACTIVITY_SECONDS})`)
         .option("--hostname <string>", `The process will listen on this hostname for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_HOSTNAME})`)
         .option("--port <int>", `The process will listen on this port for any HTTP and Prometheus metrics requests (ex: ${DEFAULT_PORT})`)
+        .option("--metrics-labels [string...]", "To apply generic labels to all default metrics (ex: --labels foo=bar)", handleMetricsLabels, DEFAULT_METRICS_LABELS)
         .option("--verbose", "Enable verbose logging")
 }
