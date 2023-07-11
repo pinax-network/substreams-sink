@@ -3,6 +3,7 @@ import type { BlockEmitter } from "@substreams/node";
 import client, { Counter, Gauge, Summary, Histogram, type CounterConfiguration, type GaugeConfiguration, type SummaryConfiguration, type HistogramConfiguration } from "prom-client";
 
 import { logger } from "./logger.js";
+import type { RunOptions } from "./commander.js";
 
 // Prometheus Exporter
 export const registry = new client.Registry();
@@ -84,18 +85,18 @@ export function onPrometheusMetrics(emitter: BlockEmitter) {
     });
 }
 
-export function handleManifest(substreams: BlockEmitter, manifest: string, moduleHash: string) {
-    logger.info("manifest", { manifest, moduleHash });
-    const labelNames = ["moduleHash", "manifest", "outputModule", "host", "auth", "startBlockNum", "productionMode"];
+export function handleManifest(emitter: BlockEmitter, moduleHash: string, options: RunOptions) {
+    logger.info("manifest", { moduleHash, manifest: options.manifest, substreamsEndpoint: options.substreamsEndpoint });
+    const labelNames = ["moduleHash", "manifest", "outputModule", "substreamsEndpoint", "startBlockNum", "stopBlockNum", "productionMode"];
     registerGauge("manifest", "Substreams manifest and sha256 hash of map module", labelNames);
     const gauge = registry.getSingleMetric("manifest") as Gauge;
     gauge.labels({
         moduleHash,
-        manifest,
-        outputModule: substreams.request.outputModule,
-        host: "",
-        auth: "",
-        startBlockNum: String(substreams.request.startBlockNum),
-        productionMode: String(substreams.request.productionMode)
+        manifest: options.manifest,
+        outputModule: emitter.request.outputModule,
+        substreamsEndpoint: options.substreamsEndpoint,
+        startBlockNum: String(emitter.request.startBlockNum),
+        stopBlockNum: String(emitter.request.stopBlockNum),
+        productionMode: String(emitter.request.productionMode)
     }).set(1);
 }

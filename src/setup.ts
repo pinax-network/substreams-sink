@@ -59,7 +59,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     if (options.collectDefaultMetrics) {
         prometheus.client.collectDefaultMetrics({labels: options.metricsLabels});
     }
-    prometheus.handleManifest(emitter, manifest, moduleHash);
+    prometheus.handleManifest(emitter, moduleHash, options);
     prometheus.onPrometheusMetrics(emitter);
 
     // Save new cursor on each new block emitted
