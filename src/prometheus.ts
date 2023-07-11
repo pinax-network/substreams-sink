@@ -6,7 +6,7 @@ import { logger } from "./logger.js";
 
 // Prometheus Exporter
 export const registry = new client.Registry();
-export {client};
+export { client };
 
 // Metrics
 export function registerCounter(name: string, help = "help", labelNames: string[] = [], config?: CounterConfiguration<string>): Counter | undefined {
