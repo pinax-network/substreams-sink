@@ -56,7 +56,9 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const moduleHash = await createModuleHashHex(substreamPackage.modules, outputModule);
 
     // Handle Prometheus Metrics
-    if (options.collectDefaultMetrics) prometheus.collectDefaultMetrics(options.metricsLabels);
+    if (options.collectDefaultMetrics) {
+        prometheus.client.collectDefaultMetrics({labels: options.metricsLabels});
+    }
     prometheus.handleManifest(emitter, manifest, moduleHash);
     prometheus.onPrometheusMetrics(emitter);
 

@@ -6,11 +6,7 @@ import { logger } from "./logger.js";
 
 // Prometheus Exporter
 export const registry = new client.Registry();
-
-// Default Metrics
-export function collectDefaultMetrics(labels: Object) {
-    client.collectDefaultMetrics({ labels });
-}
+export {client};
 
 // Metrics
 export function registerCounter(name: string, help = "help", labelNames: string[] = [], config?: CounterConfiguration<string>): Counter | undefined {
