@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, applyParams } from "@substreams/core";
+import { createRegistry, createRequest, applyParams, createModuleHash, createModuleHashHex } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
@@ -17,6 +17,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     // Download Substream package
     const manifest = options.manifest;
     const substreamPackage = await readPackage(manifest);
+    if ( !substreamPackage.modules ) throw new Error("No modules found in substream package");
 
     // auth API token
     // https://app.streamingfast.io/
@@ -40,6 +41,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     }
 
     // Connect Transport
+    const startCursor = cursor.readCursor(cursorFile);
     const registry = createRegistry(substreamPackage);
     const transport = createDefaultTransport(baseUrl, token, registry);
     const request = createRequest({
@@ -48,7 +50,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
         startBlockNum,
         stopBlockNum,
         productionMode,
-        startCursor: cursor.readCursor(cursorFile),
+        startCursor,
     });
 
     // Substreams Block Emitter
@@ -64,6 +66,8 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     // Adds delay before using sink
     await setTimeout(delayBeforeStart);
 
+    // Module hash
+    const moduleHash = await createModuleHashHex(substreamPackage.modules, outputModule);
 
-    return emitter;
+    return {emitter, substreamPackage, moduleHash, startCursor};
 }

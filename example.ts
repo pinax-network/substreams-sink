@@ -11,7 +11,7 @@ const customCounter = prometheus.registerCounter("custom_counter");
 
 command.action(async (options: commander.RunOptions) => {
   // Setup sink for Block Emitter
-  const emitter = await setup(options, pkg);
+  const {emitter} = await setup(options, pkg);
 
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
