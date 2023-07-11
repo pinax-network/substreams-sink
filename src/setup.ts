@@ -57,7 +57,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // Handle Prometheus Metrics
     if (options.collectDefaultMetrics) {
-        prometheus.client.collectDefaultMetrics({labels: options.metricsLabels});
+        prometheus.client.collectDefaultMetrics({ labels: options.metricsLabels });
     }
     prometheus.handleManifest(emitter, moduleHash, options);
     prometheus.onPrometheusMetrics(emitter);
