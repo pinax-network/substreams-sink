@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, applyParams } from "@substreams/core";
+import { createRegistry, createRequest, applyParams, createModuleHash } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
@@ -54,8 +54,12 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     // Substreams Block Emitter
     const emitter = new BlockEmitter(transport, request, registry);
 
+    // Get Substreams hash
+    const hash = await createModuleHash(substreamPackage.modules, outputModule);
+
     // Handle Prometheus Metrics
     if (collectDefaultMetrics) prometheus.collectDefaultMetrics(metricsLabels);
+    prometheus.handleManifest(emitter, manifest, Buffer.from(hash).toString("hex"));
     prometheus.onPrometheusMetrics(emitter);
 
     // Save new cursor on each new block emitted

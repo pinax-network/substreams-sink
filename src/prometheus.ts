@@ -1,7 +1,9 @@
 import type { BlockScopedData, Clock } from "@substreams/core/proto";
 import type { BlockEmitter } from "@substreams/node";
 import client, { Counter, Gauge, Summary, Histogram, type CounterConfiguration, type GaugeConfiguration, type SummaryConfiguration, type HistogramConfiguration } from "prom-client";
+
 import { logger } from "./logger.js";
+import type { RunOptions } from "./commander.js";
 
 // Prometheus Exporter
 export const registry = new client.Registry();
@@ -85,4 +87,20 @@ export function onPrometheusMetrics(emitter: BlockEmitter) {
         updateBlockDataMetrics(block);
         if (block.clock) updateClockMetrics(block.clock);
     });
+}
+
+export function handleManifest(substreams: BlockEmitter, manifest: string, hash: string) {
+    logger.info("manifest", { manifest, hash });
+    const labelNames = ["hash", "manifest", "outputModule", "host", "auth", "startBlockNum", "productionMode"];
+    registerGauge("manifest", "Substreams manifest and sha256 hash of map module", labelNames);
+    const gauge = registry.getSingleMetric("manifest") as Gauge;
+    gauge.labels({
+        hash,
+        manifest,
+        outputModule: substreams.request.outputModule,
+        host: "",
+        auth: "",
+        startBlockNum: String(substreams.request.startBlockNum),
+        productionMode: String(substreams.request.productionMode)
+    }).set(1);
 }
