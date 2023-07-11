@@ -31,7 +31,7 @@ export const PARAMS = process.env.PARAMS;
 export function getToken(options: { substreamsApiToken?: string, substreamsApiTokenEnvvar?: string } = {}) {
     // CLI priority
     let token = options.substreamsApiToken;
-    if ( !token && options.substreamsApiTokenEnvvar ) token = process.env[options.substreamsApiTokenEnvvar];
+    if (!token && options.substreamsApiTokenEnvvar) token = process.env[options.substreamsApiTokenEnvvar];
 
     // .env secondary
     if (!token) token = SUBSTREAMS_API_TOKEN;
@@ -87,4 +87,8 @@ export function getPort(options: { port?: number } = {}) {
 
 export function getProductionMode(options: { disableProductionMode?: boolean } = {}) {
     return options.disableProductionMode ?? PRODUCTION_MODE;
+}
+
+export function getDelayBeforeStart(options: { delayBeforeStart?: number } = {}) {
+    return options.delayBeforeStart ?? DEFAULT_DELAY_BEFORE_START;
 }

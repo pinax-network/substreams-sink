@@ -6,6 +6,7 @@ import * as cursor from "./cursor.js";
 import * as config from "./config.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
+import { setTimeout } from "timers/promises";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
@@ -29,6 +30,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const params = config.getParams(options);
     const cursorFile = config.getCursorFile(options);
     const productionMode = config.getProductionMode(options);
+    const delayBeforeStart = config.getDelayBeforeStart(options);
 
     // Apply params
     if (params.length && substreamPackage.modules) {
@@ -55,6 +57,9 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // Save new cursor on each new block emitted
     cursor.onCursor(emitter, cursorFile);
+
+    // Adds delay before using sink
+    await setTimeout(delayBeforeStart);
 
     return emitter;
 }
