@@ -1,5 +1,4 @@
-import fs from "node:fs";
-import { createRegistry, createRequest, fetchSubstream, applyParams } from "@substreams/core";
+import { createRegistry, createRequest, applyParams } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import type { RunOptions } from "./commander.js";
@@ -16,7 +15,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // Download Substream package
     const manifest = config.getManifest(options);
-    const substreamPackage = fs.existsSync(manifest!) ? await readPackage(manifest!) : await fetchSubstream(manifest!);
+    const substreamPackage = await readPackage(manifest);
 
     // auth API token
     // https://app.streamingfast.io/
@@ -29,6 +28,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const stopBlockNum = config.getStopBlock(options);
     const params = config.getParams(options);
     const cursorFile = config.getCursorFile(options);
+    const productionMode = config.getProductionMode(options);
 
     // Apply params
     if (params.length && substreamPackage.modules) {
@@ -37,13 +37,13 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // Connect Transport
     const registry = createRegistry(substreamPackage);
-    const transport = createDefaultTransport(baseUrl!, token, registry);
+    const transport = createDefaultTransport(baseUrl, token, registry);
     const request = createRequest({
         substreamPackage,
-        outputModule: outputModule!,
+        outputModule,
         startBlockNum,
         stopBlockNum,
-        productionMode: !options.disableProductionMode,
+        productionMode,
         startCursor: cursor.readCursor(cursorFile),
     });
 

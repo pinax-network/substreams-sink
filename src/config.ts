@@ -7,14 +7,14 @@ export const DEFAULT_SUBSTREAMS_API_TOKEN_ENV = "SUBSTREAMS_API_TOKEN";
 export const DEFAULT_CURSOR_FILE = "cursor.lock";
 export const DEFAULT_VERBOSE = false;
 export const DEFAULT_RESTART_INACTIVITY_SECONDS = 60;
-export const DEFAULT_DISABLE_PRODUCTION_MODE = false;
+export const DEFAULT_PRODUCTION_MODE = true;
 export const DEFAULT_DELAY_BEFORE_START = 0;
 
 // optional
 export const HOSTNAME = process.env.HOSTNAME ?? DEFAULT_HOSTNAME;
 export const PORT = parseInt(process.env.PORT ?? String(DEFAULT_PORT));
 export const VERBOSE = JSON.parse(process.env.VERBOSE ?? String(DEFAULT_VERBOSE)) as boolean;
-export const DISABLE_PRODUCTION_MODE = JSON.parse(process.env.DISABLE_PRODUCTION_MODE ?? String(DEFAULT_DISABLE_PRODUCTION_MODE)) as boolean;
+export const PRODUCTION_MODE = JSON.parse(process.env.PRODUCTION_MODE ?? String(DEFAULT_PRODUCTION_MODE)) as boolean;
 export const DELAY_BEFORE_START = parseInt(process.env.DELAY_BEFORE_START ?? String(DEFAULT_DELAY_BEFORE_START));
 export const CURSOR_FILE = process.env.CURSOR_FILE ?? DEFAULT_CURSOR_FILE;
 export const SUBSTREAMS_API_TOKEN = process.env.SUBSTREAMS_API_TOKEN;
@@ -36,22 +36,24 @@ export function getToken(options: { substreamsApiToken?: string, substreamsApiTo
     // .env secondary
     if (!token) token = SUBSTREAMS_API_TOKEN;
     if (!token) token = process.env[SUBSTREAMS_API_TOKEN_ENVVAR];
-    return token;
+    return token ?? ""; // allow to provide no token
 }
 
 export function getBaseUrl(options: { substreamsEndpoint?: string } = {}) {
-    return options.substreamsEndpoint ?? SUBSTREAMS_ENDPOINT;
+    const baseUrl = options.substreamsEndpoint ?? SUBSTREAMS_ENDPOINT;
+    if (!baseUrl) throw new Error("SUBSTREAMS_ENDPOINT is require");
+    return baseUrl;
 }
 
 export function getManifest(options: { manifest?: string } = {}) {
     const manifest = options.manifest ?? MANIFEST;
-    // if (!manifest) throw new Error("MANIFEST is require");
+    if (!manifest) throw new Error("MANIFEST is require");
     return manifest;
 }
 
 export function getModuleName(options: { moduleName?: string } = {}) {
     const moduleName = options.moduleName ?? MODULE_NAME ?? OUTPUT_MODULE;
-    // if (!moduleName) throw new Error("MODULE_NAME or OUTPUT_MODULE is required");
+    if (!moduleName) throw new Error("MODULE_NAME or OUTPUT_MODULE is required");
     return moduleName;
 }
 
@@ -81,4 +83,8 @@ export function getHostname(options: { hostname?: string } = {}) {
 
 export function getPort(options: { port?: number } = {}) {
     return options.port ?? PORT;
+}
+
+export function getProductionMode(options: { disableProductionMode?: boolean } = {}) {
+    return options.disableProductionMode ?? PRODUCTION_MODE;
 }
