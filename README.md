@@ -38,22 +38,24 @@ Usage: substreams-sink run [options]
 Substreams sink module
 
 Options:
-  -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from
-  --manifest <string>                     URL of Substreams package
-  --module-name <string>                  Name of the output module (declared in the manifest)
-  -s --start-block <int>                  Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming)
-  -t --stop-block <int>                   Stop block to end stream at, inclusively
-  -p, --params <string...>                Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)
-  --substreams-api-token <string>         API token for the substream endpoint
-  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the substream endpoint (ex: SUBSTREAMS_API_TOKEN)
-  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts
-  --cursor-file <string>                  cursor lock file (ex: cursor.lock)
-  --disable-production-mode               Disable production mode, allows debugging modules logs, stops high-speed parallel processing
-  --restart-inactivity-seconds <int>      If set, the sink will restart when inactive for over a certain amount of seconds (ex: 60)
-  --hostname <string>                     The process will listen on this hostname for any HTTP and Prometheus metrics requests (ex: localhost)
-  --port <int>                            The process will listen on this port for any HTTP and Prometheus metrics requests (ex: 9102)
-  --verbose                               Enable verbose logging
-  -h, --help                              display help for command
+  -e --substreams-endpoint <string>    Substreams gRPC endpoint to stream data from (env: SUBSTREAMS_ENDPOINT)
+  --manifest <string>                  URL of Substreams package (env: MANIFEST)
+  --module-name <string>               Name of the output module (declared in the manifest) (env: MODULE_NAME)
+  -s --start-block <int>               Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming) (default: "-1", env: START_BLOCK)
+  -t --stop-block <int>                Stop block to end stream at, inclusively (env: STOP_BLOCK)
+  -p, --params <string...>             Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY) (default: [], env: PARAMS)
+  --substreams-api-token <string>      API token for the substream endpoint (default: "", env: SUBSTREAMS_API_TOKEN)
+  --delay-before-start <int>           [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts (default: 0,
+                                       env: DELAY_BEFORE_START)
+  --cursor-file <string>               Cursor lock file (default: "cursor.lock", env: CURSOR_FILE)
+  --disable-production-mode            Disable production mode, allows debugging modules logs, stops high-speed parallel processing (default: true, env: PRODUCTION_MODE)
+  --restart-inactivity-seconds <int>   If set, the sink will restart when inactive for over a certain amount of seconds (default: 60, env: RESTART_INACTIVITY_SECONDS)
+  --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
+  --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
+  --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
+  --collect-default-metrics <boolean>  Collect default metrics (default: false, env: COLLECT_DEFAULT_METRICS)
+  --verbose                            Enable verbose logging (default: false, env: VERBOSE)
+  -h, --help                           display help for command
 ```
 
 ### Example
