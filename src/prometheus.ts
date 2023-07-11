@@ -3,13 +3,12 @@ import type { BlockEmitter } from "@substreams/node";
 import client, { Counter, Gauge, Summary, Histogram, type CounterConfiguration, type GaugeConfiguration, type SummaryConfiguration, type HistogramConfiguration } from "prom-client";
 
 import { logger } from "./logger.js";
-import type { RunOptions } from "./commander.js";
 
 // Prometheus Exporter
 export const registry = new client.Registry();
 
 // Default Metrics
-export function collectDefaultMetrics(labels: any) {
+export function collectDefaultMetrics(labels: Object) {
     client.collectDefaultMetrics({ labels });
 }
 

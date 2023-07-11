@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, applyParams, createModuleHash, createModuleHashHex } from "@substreams/core";
+import { createRegistry, createRequest, applyParams, createModuleHashHex } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
@@ -10,8 +10,7 @@ import { logger } from "./logger.js";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
-    const verbose = options.verbose;
-    if (verbose) logger.enable();
+    if (options.verbose) logger.enable();
     logger.setName(pkg.name);
 
     // Download Substream package
@@ -31,9 +30,6 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const params = options.params;
     const cursorFile = options.cursorFile;
     const productionMode = !options.disableProductionMode;
-    const delayBeforeStart = options.delayBeforeStart;
-    const collectDefaultMetrics = options.collectDefaultMetrics;
-    const metricsLabels = options.metricsLabels;
 
     // Apply params
     if (params.length && substreamPackage.modules) {
@@ -60,7 +56,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const moduleHash = await createModuleHashHex(substreamPackage.modules, outputModule);
 
     // Handle Prometheus Metrics
-    if (collectDefaultMetrics) prometheus.collectDefaultMetrics(metricsLabels);
+    if (options.collectDefaultMetrics) prometheus.collectDefaultMetrics(options.metricsLabels);
     prometheus.handleManifest(emitter, manifest, moduleHash);
     prometheus.onPrometheusMetrics(emitter);
 
@@ -68,7 +64,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     cursor.onCursor(emitter, cursorFile);
 
     // Adds delay before using sink
-    await setTimeout(delayBeforeStart);
+    await setTimeout(options.delayBeforeStart);
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }
