@@ -90,8 +90,8 @@ export function onPrometheusMetrics(emitter: BlockEmitter) {
 }
 
 export function handleManifest(substreams: BlockEmitter, manifest: string, moduleHash: string) {
-    logger.info("manifest", { manifest, hash });
-    const labelNames = ["hash", "manifest", "outputModule", "host", "auth", "startBlockNum", "productionMode"];
+    logger.info("manifest", { manifest, moduleHash });
+    const labelNames = ["moduleHash", "manifest", "outputModule", "host", "auth", "startBlockNum", "productionMode"];
     registerGauge("manifest", "Substreams manifest and sha256 hash of map module", labelNames);
     const gauge = registry.getSingleMetric("manifest") as Gauge;
     gauge.labels({
