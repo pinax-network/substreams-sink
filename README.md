@@ -60,8 +60,7 @@ Options:
 
 ```js
 import pkg from "./package.json" assert { type: "json" };
-import { commander, setup, prometheus } from "./index.js";
-import { listen } from "./src/http";
+import { commander, setup, prometheus, http } from "substreams-sink";
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
@@ -72,7 +71,7 @@ const customCounter = prometheus.registerCounter("custom_counter");
 
 command.action(async (options: commander.RunOptions) => {
   // Setup sink for Block Emitter
-  const emitter = await setup(options, pkg);
+  const {emitter} = await setup(options, pkg);
 
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
@@ -83,7 +82,7 @@ command.action(async (options: commander.RunOptions) => {
   });
 
   // Setup HTTP server & Prometheus metrics
-  listen(options);
+  http.listen(options);
 
   // Start streaming
   emitter.start();
