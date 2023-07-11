@@ -1,12 +1,13 @@
 import { createRegistry, createRequest, applyParams } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
+import { setTimeout } from "timers/promises";
+
 import type { RunOptions } from "./commander.js";
 import * as cursor from "./cursor.js";
 import * as config from "./config.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
-import { setTimeout } from "timers/promises";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog

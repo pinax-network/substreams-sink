@@ -1,25 +1,43 @@
 import type { BlockScopedData, Clock } from "@substreams/core/proto";
 import type { BlockEmitter } from "@substreams/node";
-import client, { Counter, Gauge } from "prom-client";
+import client, { Counter, Gauge, Summary, Histogram, type CounterConfiguration, type GaugeConfiguration, type SummaryConfiguration, type HistogramConfiguration } from "prom-client";
 import { logger } from "./logger.js";
 
 // Prometheus Exporter
 export const registry = new client.Registry();
 
 // Metrics
-export function registerCounter(name: string, help = "help", labelNames: string[] = []): Counter | undefined {
+export function registerCounter(name: string, help = "help", labelNames: string[] = [], config?: CounterConfiguration<string>): Counter | undefined {
     try {
-        registry.registerMetric(new Counter({ name, help, labelNames }));
+        registry.registerMetric(new Counter({ name, help, labelNames, ...config }));
         return registry.getSingleMetric(name) as Counter;
     } catch (e) {
         logger.error(e);
     }
 }
 
-export function registerGauge(name: string, help = "help", labelNames: string[] = []): Gauge | undefined {
+export function registerGauge(name: string, help = "help", labelNames: string[] = [], config?: GaugeConfiguration<string>): Gauge | undefined {
     try {
-        registry.registerMetric(new Gauge({ name, help, labelNames }));
+        registry.registerMetric(new Gauge({ name, help, labelNames, ...config }));
         return registry.getSingleMetric(name) as Gauge;
+    } catch (e) {
+        logger.error(e);
+    }
+}
+
+export function registerSummary(name: string, help = "help", labelNames: string[] = [], config?: SummaryConfiguration<string>): Summary | undefined {
+    try {
+        registry.registerMetric(new Summary({ name, help, labelNames, ...config }));
+        return registry.getSingleMetric(name) as Summary;
+    } catch (e) {
+        logger.error(e);
+    }
+}
+
+export function registerHistogram(name: string, help = "help", labelNames: string[] = [], config?: HistogramConfiguration<string>): Histogram | undefined {
+    try {
+        registry.registerMetric(new Histogram({ name, help, labelNames, ...config }));
+        return registry.getSingleMetric(name) as Histogram;
     } catch (e) {
         logger.error(e);
     }
