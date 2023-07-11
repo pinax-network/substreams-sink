@@ -5,33 +5,34 @@ import { setTimeout } from "timers/promises";
 
 import type { RunOptions } from "./commander.js";
 import * as cursor from "./cursor.js";
-import * as config from "./config.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
-    const verbose = config.getVerbose(options);
+    const verbose = options.verbose;
     if (verbose) logger.enable();
     logger.setName(pkg.name);
 
     // Download Substream package
-    const manifest = config.getManifest(options);
+    const manifest = options.manifest;
     const substreamPackage = await readPackage(manifest);
 
     // auth API token
     // https://app.streamingfast.io/
-    const token = config.getToken(options);
-    const baseUrl = config.getBaseUrl(options);
+    const token = options.substreamsApiToken;
+    const baseUrl = options.substreamsEndpoint;
 
     // User parameters
-    const outputModule = config.getModuleName(options);
-    const startBlockNum = config.getStartBlock(options);
-    const stopBlockNum = config.getStopBlock(options);
-    const params = config.getParams(options);
-    const cursorFile = config.getCursorFile(options);
-    const productionMode = config.getProductionMode(options);
-    const delayBeforeStart = config.getDelayBeforeStart(options);
+    const outputModule = options.moduleName;
+    const startBlockNum = options.startBlock as any;
+    const stopBlockNum = options.stopBlock as any;
+    const params = options.params;
+    const cursorFile = options.cursorFile;
+    const productionMode = !options.disableProductionMode;
+    const delayBeforeStart = options.delayBeforeStart;
+    const collectDefaultMetrics = options.collectDefaultMetrics;
+    const metricsLabels = options.metricsLabels;
 
     // Apply params
     if (params.length && substreamPackage.modules) {
@@ -54,6 +55,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const emitter = new BlockEmitter(transport, request, registry);
 
     // Handle Prometheus Metrics
+    if (collectDefaultMetrics) prometheus.collectDefaultMetrics(metricsLabels);
     prometheus.onPrometheusMetrics(emitter);
 
     // Save new cursor on each new block emitted
@@ -61,6 +63,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // Adds delay before using sink
     await setTimeout(delayBeforeStart);
+
 
     return emitter;
 }
