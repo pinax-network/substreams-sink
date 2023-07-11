@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, applyParams, createModuleHashHex } from "@substreams/core";
+import { createRegistry, createRequest, applyParams, createModuleHashHex, parseAuthorization } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
@@ -20,7 +20,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // auth API token
     // https://app.streamingfast.io/
-    const token = options.substreamsApiToken;
+    const token = await parseAuthorization(options.substreamsApiToken, options.authIssueUrl);
     const baseUrl = options.substreamsEndpoint;
 
     // User parameters

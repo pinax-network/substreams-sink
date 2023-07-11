@@ -11,3 +11,4 @@ export const DEFAULT_COLLECT_DEFAULT_METRICS = false;
 export const DEFAULT_START_BLOCK = "-1";
 export const DEFAULT_SUBSTREAMS_API_TOKEN = "";
 export const DEFAULT_PARAMS = [];
+export const DEFAULT_AUTH_ISSUE_URL = "https://auth.pinax.network/v1/auth/issue";
