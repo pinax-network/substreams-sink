@@ -6,6 +6,7 @@ import { setTimeout } from "timers/promises";
 import type { RunOptions } from "./commander.js";
 import * as cursor from "./cursor.js";
 import * as prometheus from "./prometheus.js";
+import * as restartInactivitySeconds from "./restartInactivitySeconds.js";
 import { logger } from "./logger.js";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
@@ -67,6 +68,9 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
 
     // Adds delay before using sink
     await setTimeout(options.delayBeforeStart);
+
+    // Checks if inactive
+    restartInactivitySeconds.onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }
