@@ -6,9 +6,8 @@ import { setTimeout } from "timers/promises";
 import type { RunOptions } from "./commander.js";
 import * as cursor from "./cursor.js";
 import * as prometheus from "./prometheus.js";
-import * as restartInactivitySeconds from "./restartInactivitySeconds.js";
 import { logger } from "./logger.js";
-import { onRestartInactivitySeconds } from "./onRestartInactivitySeconds.js";
+import { onRestartInactivitySeconds } from "./restartInactivitySeconds.js";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
@@ -67,14 +66,11 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     // Save new cursor on each new block emitted
     cursor.onCursor(emitter, cursorFile);
 
-    // Restart on inactivity
-    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
-
     // Adds delay before using sink
     await setTimeout(options.delayBeforeStart);
 
-    // Checks if inactive
-    restartInactivitySeconds.onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
+    // Restart on inactivity
+    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }
