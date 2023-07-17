@@ -66,11 +66,11 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     // Save new cursor on each new block emitted
     cursor.onCursor(emitter, cursorFile);
 
-    // Restart on inactivity
-    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
-
     // Adds delay before using sink
     await setTimeout(options.delayBeforeStart);
+
+    // Restart on inactivity
+    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }
