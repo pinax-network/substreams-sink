@@ -9,6 +9,7 @@ export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactiv
             logger.error(`Restarting due to inactivity for ${dif} seconds`);
             process.exit(1);
         }
+        lastUpdate = now();
     });
 }
 
