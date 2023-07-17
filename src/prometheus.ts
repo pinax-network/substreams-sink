@@ -58,6 +58,7 @@ const substreams_sink_progress_message = registerCounter("substreams_sink_progre
 // Gauges
 const head_block_number = registerGauge("head_block_number", "Last processed block number");
 const head_block_time_drift = registerGauge("head_block_time_drift", "Head block time drift in seconds");
+const head_block_timestamp = registerGauge("head_block_timestamp", "Head block timestamp");
 const substreams_sink_backprocessing_completion = registerGauge("substreams_sink_backprocessing_completion", "Determines if backprocessing is completed, which is if we receive a first data message");
 const substreams_sink_progress_message_last_end_block = registerGauge("substreams_sink_progress_message_last_end_block", "Latest progress reported processed range end block for each module, usually increments but due scheduling could make that fluctuates up/down", ["module"]);
 
@@ -69,6 +70,7 @@ function calculateHeadBlockTimeDrift(clock: Clock) {
 function updateClockMetrics(clock: Clock) {
     head_block_number?.set(Number(clock.number));
     head_block_time_drift?.set(calculateHeadBlockTimeDrift(clock));
+    head_block_timestamp?.set(Number(clock.timestamp?.seconds));
 }
 
 function updateBlockDataMetrics(block: BlockScopedData) {
