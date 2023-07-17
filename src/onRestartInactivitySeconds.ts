@@ -4,9 +4,8 @@ import { logger } from "./logger.js";
 export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactivitySeconds: number) {
     let lastUpdate = now();
     emitter.on("cursor", () => {
-        const dif = Math.abs(now() - lastUpdate);
-        if (dif > restartInactivitySeconds) {
-            logger.error(`Restarting due to inactivity for ${dif} seconds`);
+        if (now() - lastUpdate > restartInactivitySeconds) {
+            logger.error(`Restarting due to inactivity for ${restartInactivitySeconds} seconds`);
             process.exit(1);
         }
         lastUpdate = now();
