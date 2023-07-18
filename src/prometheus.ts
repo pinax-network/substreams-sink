@@ -64,7 +64,7 @@ const substreams_sink_progress_message_last_end_block = registerGauge("substream
 
 function calculateHeadBlockTimeDrift(clock: Clock) {
     const seconds = Number(clock.timestamp?.seconds);
-    return Math.floor((new Date().valueOf() / 1000) - seconds);
+    return Math.round((new Date().valueOf() / 1000) - seconds);
 }
 
 function updateClockMetrics(clock: Clock) {
