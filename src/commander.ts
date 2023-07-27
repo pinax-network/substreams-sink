@@ -54,7 +54,7 @@ export function run(program: Command, pkg: Package) {
         .addOption(new Option("-p, --params <string...>", "Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)").default(DEFAULT_PARAMS).env("PARAMS")) // Make sure params are parsed correctly when using env
         .addOption(new Option("--substreams-api-token <string>", "API token for the substream endpoint or API key if '--auth-issue-url' is specified").default(DEFAULT_SUBSTREAMS_API_TOKEN).env("SUBSTREAMS_API_TOKEN"))
         .addOption(new Option("--auth-issue-url <string>", "URL used to issue a token").default(DEFAULT_AUTH_ISSUE_URL).env("AUTH_ISSUE_URL"))
-        .addOption(new Option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts").default(DEFAULT_DELAY_BEFORE_START).env("DELAY_BEFORE_START"))
+        .addOption(new Option("--delay-before-start <int>", "Delay (ms) before starting Substreams").default(DEFAULT_DELAY_BEFORE_START).env("DELAY_BEFORE_START"))
         .addOption(new Option("--cursor-path <string>", "File path or URL to cursor lock file").default(DEFAULT_CURSOR_PATH).env("CURSOR_PATH"))
         .addOption(new Option("--disable-production-mode", "Disable production mode, allows debugging modules logs, stops high-speed parallel processing").default(DEFAULT_DISABLE_PRODUCTION_MODE).env("DISABLE_PRODUCTION_MODE"))
         .addOption(new Option("--restart-inactivity-seconds <int>", "If set, the sink will restart when inactive for over a certain amount of seconds").default(DEFAULT_RESTART_INACTIVITY_SECONDS).env("RESTART_INACTIVITY_SECONDS"))

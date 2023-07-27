@@ -35,7 +35,7 @@ npm install substreams-sink
 ```bash
 Usage: substreams-sink run [options]
 
-Substreams sink module
+Substreams Sink
 
 Options:
   -e --substreams-endpoint <string>    Substreams gRPC endpoint to stream data from (env: SUBSTREAMS_ENDPOINT)
@@ -44,12 +44,12 @@ Options:
   -s --start-block <int>               Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming) (default: "-1", env: START_BLOCK)
   -t --stop-block <int>                Stop block to end stream at, inclusively (env: STOP_BLOCK)
   -p, --params <string...>             Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY) (default: [], env: PARAMS)
-  --substreams-api-token <string>      API token for the substream endpoint (default: "", env: SUBSTREAMS_API_TOKEN)
-  --delay-before-start <int>           [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts (default: 0,
-                                       env: DELAY_BEFORE_START)
-  --cursor-file <string>               Cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
-  --disable-production-mode            Disable production mode, allows debugging modules logs, stops high-speed parallel processing (default: true, env: PRODUCTION_MODE)
-  --restart-inactivity-seconds <int>   If set, the sink will restart when inactive for over a certain amount of seconds (default: 60, env: RESTART_INACTIVITY_SECONDS)
+  --substreams-api-token <string>      API token for the substream endpoint or API key if '--auth-issue-url' is specified (default: "", env: SUBSTREAMS_API_TOKEN)
+  --auth-issue-url <string>            URL used to issue a token (default: "https://auth.pinax.network/v1/auth/issue", env: AUTH_ISSUE_URL)
+  --delay-before-start <int>           Delay (ms) before starting Substreams (default: 0, env: DELAY_BEFORE_START)
+  --cursor-path <string>               File path or URL to cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
+  --disable-production-mode            Disable production mode, allows debugging modules logs, stops high-speed parallel processing (default: false, env: DISABLE_PRODUCTION_MODE)
+  --restart-inactivity-seconds <int>   If set, the sink will restart when inactive for over a certain amount of seconds (default: 300, env: RESTART_INACTIVITY_SECONDS)
   --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
   --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
   --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
