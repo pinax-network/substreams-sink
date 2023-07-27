@@ -1,7 +1,7 @@
 // default options
 export const DEFAULT_HOSTNAME = "localhost";
 export const DEFAULT_PORT = 9102;
-export const DEFAULT_CURSOR_FILE = "cursor.lock";
+export const DEFAULT_CURSOR_PATH = "cursor.lock";
 export const DEFAULT_VERBOSE = false;
 export const DEFAULT_RESTART_INACTIVITY_SECONDS = 300;
 export const DEFAULT_DISABLE_PRODUCTION_MODE = false;

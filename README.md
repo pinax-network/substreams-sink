@@ -47,7 +47,7 @@ Options:
   --substreams-api-token <string>      API token for the substream endpoint (default: "", env: SUBSTREAMS_API_TOKEN)
   --delay-before-start <int>           [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts (default: 0,
                                        env: DELAY_BEFORE_START)
-  --cursor-file <string>               Cursor lock file (default: "cursor.lock", env: CURSOR_FILE)
+  --cursor-file <string>               Cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
   --disable-production-mode            Disable production mode, allows debugging modules logs, stops high-speed parallel processing (default: true, env: PRODUCTION_MODE)
   --restart-inactivity-seconds <int>   If set, the sink will restart when inactive for over a certain amount of seconds (default: 60, env: RESTART_INACTIVITY_SECONDS)
   --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)

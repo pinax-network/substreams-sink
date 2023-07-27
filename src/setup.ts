@@ -4,7 +4,8 @@ import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
 
 import type { RunOptions } from "./commander.js";
-import * as cursor from "./cursor.js";
+import * as fileCursor from "./cursor/fileCursor.js";
+import * as httpCursor from "./cursor/httpCursor.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 import { onRestartInactivitySeconds } from "./restartInactivitySeconds.js";
@@ -29,7 +30,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     const startBlockNum = options.startBlock as any;
     const stopBlockNum = options.stopBlock as any;
     const params = options.params;
-    const cursorFile = options.cursorFile;
+    const cursorPath = options.cursorPath;
     const productionMode = !options.disableProductionMode;
 
     // Apply params
@@ -37,8 +38,11 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
         applyParams(params, substreamPackage.modules.modules);
     }
 
+    // Cursor
+    const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
+
     // Connect Transport
-    const startCursor = cursor.readCursor(cursorFile);
+    const startCursor = await cursor.readCursor(cursorPath);
     const registry = createRegistry(substreamPackage);
     const transport = createDefaultTransport(baseUrl, token, registry);
     const request = createRequest({
@@ -64,7 +68,7 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     prometheus.onPrometheusMetrics(emitter);
 
     // Save new cursor on each new block emitted
-    cursor.onCursor(emitter, cursorFile);
+    cursor.onCursor(emitter, cursorPath);
 
     // Adds delay before using sink
     await setTimeout(options.delayBeforeStart);

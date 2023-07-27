@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Command, Option } from "commander";
-import { DEFAULT_CURSOR_FILE, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_DISABLE_PRODUCTION_MODE, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START } from "./config.js";
+import { DEFAULT_CURSOR_PATH, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_DISABLE_PRODUCTION_MODE, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START } from "./config.js";
 
 export interface Package {
     name: string;
@@ -18,7 +18,7 @@ export interface RunOptions {
     substreamsApiToken: string;
     authIssueUrl: string;
     delayBeforeStart: number;
-    cursorFile: string;
+    cursorPath: string;
     disableProductionMode: boolean;
     restartInactivitySeconds: number;
     hostname: string;
@@ -55,7 +55,7 @@ export function run(program: Command, pkg: Package) {
         .addOption(new Option("--substreams-api-token <string>", "API token for the substream endpoint or API key if '--auth-issue-url' is specified").default(DEFAULT_SUBSTREAMS_API_TOKEN).env("SUBSTREAMS_API_TOKEN"))
         .addOption(new Option("--auth-issue-url <string>", "URL used to issue a token").default(DEFAULT_AUTH_ISSUE_URL).env("AUTH_ISSUE_URL"))
         .addOption(new Option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts").default(DEFAULT_DELAY_BEFORE_START).env("DELAY_BEFORE_START"))
-        .addOption(new Option("--cursor-file <string>", "Cursor lock file").default(DEFAULT_CURSOR_FILE).env("CURSOR_FILE"))
+        .addOption(new Option("--cursor-path <string>", "File path or URL to cursor lock file").default(DEFAULT_CURSOR_PATH).env("CURSOR_PATH"))
         .addOption(new Option("--disable-production-mode", "Disable production mode, allows debugging modules logs, stops high-speed parallel processing").default(DEFAULT_DISABLE_PRODUCTION_MODE).env("DISABLE_PRODUCTION_MODE"))
         .addOption(new Option("--restart-inactivity-seconds <int>", "If set, the sink will restart when inactive for over a certain amount of seconds").default(DEFAULT_RESTART_INACTIVITY_SECONDS).env("RESTART_INACTIVITY_SECONDS"))
         .addOption(new Option("--hostname <string>", "The process will listen on this hostname for any HTTP and Prometheus metrics requests").default(DEFAULT_HOSTNAME).env("HOSTNAME"))
