@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, applyParams, createModuleHashHex, parseAuthorization } from "@substreams/core";
+import { createRegistry, createRequest, createModuleHashHex, parseAuthorization } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
@@ -9,6 +9,7 @@ import * as httpCursor from "./cursor/httpCursor.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 import { onRestartInactivitySeconds } from "./restartInactivitySeconds.js";
+import { applyParams } from "./applyParams.js";
 
 export async function setup(options: RunOptions, pkg: { name: string }) {
     // Configure logging with TSLog
