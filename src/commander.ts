@@ -48,10 +48,9 @@ function handleHeaders(value: string, previous: Headers) {
 
     let headers = new Headers();
 
-    for (const header in previous) {
-        const [key, value] = header;
-        headers.set(key, value);
-    }
+    previous.forEach((value, header) => {
+        headers.append(header, value);
+    });
 
     for (const [key, value] of params) {
         headers.append(key, value);

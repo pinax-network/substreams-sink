@@ -42,8 +42,6 @@ export async function setup(options: RunOptions) {
     // Cursor
     const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
 
-    console.log(headers);
-
     // Connect Transport
     const startCursor = await cursor.readCursor(cursorPath);
     const registry = createRegistry(substreamPackage);

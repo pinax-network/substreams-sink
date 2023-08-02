@@ -17,9 +17,8 @@ export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactiv
         await setTimeout(CHECK_INACTIVITY_INTERVAL);
         checkInactivity();
     }
-    emitter.on("cursor", (cursor, clock) => {
+    emitter.on("cursor", (_, clock) => {
         lastUpdate = now();
-        console.log(clock.number, emitter.request.stopBlockNum)
         if (clock.number >= emitter.request.stopBlockNum - 1n) {
             isFinished = true;
         };
