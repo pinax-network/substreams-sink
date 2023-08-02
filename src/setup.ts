@@ -11,10 +11,9 @@ import { logger } from "./logger.js";
 import { onRestartInactivitySeconds } from "./restartInactivitySeconds.js";
 import { applyParams } from "./applyParams.js";
 
-export async function setup(options: RunOptions, pkg: { name: string }) {
+export async function setup(options: RunOptions) {
     // Configure logging with TSLog
     if (options.verbose) logger.enable();
-    logger.setName(pkg.name);
 
     // Download Substream package
     const manifest = options.manifest;
@@ -78,7 +77,10 @@ export async function setup(options: RunOptions, pkg: { name: string }) {
     await setTimeout(options.delayBeforeStart);
 
     // Restart on inactivity
-    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
+    // only activate once first cursor is received
+    emitter.once("cursor", () => {
+        onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
+    });
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }
