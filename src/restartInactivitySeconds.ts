@@ -6,27 +6,21 @@ const CHECK_INACTIVITY_INTERVAL = 1000;
 
 export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactivitySeconds: number) {
     let lastUpdate = now();
-    let isStarted = false;
     let isFinished = false;
 
     async function checkInactivity() {
         if (now() - lastUpdate > restartInactivitySeconds) {
-            if (!isStarted) return;
             logger.error(`Restarting due to inactivity for ${restartInactivitySeconds} seconds`);
-            process.exit(1);
+            process.exit(1); // force quit
         }
-        if (isFinished) return;
+        if (isFinished) return; // exit out of the loop
         await setTimeout(CHECK_INACTIVITY_INTERVAL);
         checkInactivity();
     }
-
-    emitter.on("cursor", () => {
-        isStarted = true;
+    emitter.on("cursor", (cursor, clock) => {
         lastUpdate = now();
-    });
-
-    emitter.on("block", (block) => {
-        if (block.clock?.number === emitter.request.stopBlockNum - 1n) {
+        console.log(clock.number, emitter.request.stopBlockNum)
+        if (clock.number >= emitter.request.stopBlockNum - 1n) {
             isFinished = true;
         };
     });
