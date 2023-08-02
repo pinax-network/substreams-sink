@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Command, Option } from "commander";
-import { DEFAULT_CURSOR_PATH, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_DISABLE_PRODUCTION_MODE, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START } from "./config.js";
+import { DEFAULT_CURSOR_PATH, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_DISABLE_PRODUCTION_MODE, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS } from "./config.js";
 
 export interface Package {
     name: string;
@@ -25,6 +25,7 @@ export interface RunOptions {
     port: number;
     metricsLabels: string[];
     collectDefaultMetrics: boolean;
+    headers: Headers;
     verbose: boolean;
 }
 
@@ -40,6 +41,23 @@ export function program(pkg: Package) {
 function handleMetricsLabels(value: string, previous: {}) {
     const params = new URLSearchParams(value);
     return { ...previous, ...Object.fromEntries(params) };
+}
+
+function handleHeaders(value: string, previous: Headers) {
+    const params = new URLSearchParams(value);
+
+    let headers = new Headers();
+
+    for (const header in previous) {
+        const [key, value] = header;
+        headers.set(key, value);
+    }
+
+    for (const [key, value] of params) {
+        headers.append(key, value);
+    }
+
+    return headers;
 }
 
 export function run(program: Command, pkg: Package) {
@@ -62,5 +80,6 @@ export function run(program: Command, pkg: Package) {
         .addOption(new Option("--port <int>", "The process will listen on this port for any HTTP and Prometheus metrics requests").default(DEFAULT_PORT).env("PORT"))
         .addOption(new Option("--metrics-labels [string...]", "To apply generic labels to all default metrics (ex: --labels foo=bar)").default(DEFAULT_METRICS_LABELS).env("METRICS_LABELS").argParser(handleMetricsLabels))
         .addOption(new Option("--collect-default-metrics <boolean>", "Collect default metrics").default(DEFAULT_COLLECT_DEFAULT_METRICS).env("COLLECT_DEFAULT_METRICS"))
+        .addOption(new Option("--headers [string...]", "Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA)").default(DEFAULT_HEADERS).env("HEADERS").argParser(handleHeaders)) // Make sure headers are parsed correctly when using env
         .addOption(new Option("--verbose", "Enable verbose logging").default(DEFAULT_VERBOSE).env("VERBOSE"));
 }
