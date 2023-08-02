@@ -42,8 +42,8 @@
     },
     "dependencies": {
         "@substreams/core": "^0.1.18",
-        "@substreams/manifest": "^0.0.4",
-        "@substreams/node": "^0.1.4",
+        "@substreams/manifest": "^0.0.8",
+        "@substreams/node": "^0.2.0",
         "commander": "latest",
         "dotenv": "latest",
         "node-fetch": "^3.3.2",

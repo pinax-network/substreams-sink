@@ -75,11 +75,8 @@ export async function setup(options: RunOptions) {
 
     // Restart on inactivity
     // only activate once first cursor is received
-    let isStarted = false;
-    emitter.on("cursor", () => {
-        if ( isStarted ) return;
+    emitter.once("cursor", () => {
         onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
-        isStarted = true;
     });
 
     return { emitter, substreamPackage, moduleHash, startCursor };
