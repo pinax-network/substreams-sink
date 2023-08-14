@@ -34,6 +34,9 @@ export async function setup(options: RunOptions) {
     const cursorPath = options.cursorPath;
     const productionMode = !options.disableProductionMode;
 
+    // Adding default headers
+    headers.set("User-Agent", "substreams-sink");
+
     // Apply params
     if (params.length && substreamPackage.modules) {
         applyParams(params, substreamPackage.modules.modules);
