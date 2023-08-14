@@ -5,8 +5,13 @@ import type { RunOptions } from "./commander.js";
 
 // Create a local server to serve Prometheus metrics
 export const server = http.createServer(async (req, res) => {
-    res.writeHead(200, { 'Content-Type': registry.contentType });
-    res.end(await registry.metrics());
+    if (!req.url) return;
+    if (req.method == "GET") {
+        if (req.url === "/metrics") {
+            res.writeHead(200, { 'Content-Type': registry.contentType });
+            return res.end(await registry.metrics());
+        }
+    }
 });
 
 export async function listen(options: RunOptions) {
