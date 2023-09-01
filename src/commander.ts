@@ -2,6 +2,9 @@ import "dotenv/config";
 import { Command, Option } from "commander";
 import { DEFAULT_CURSOR_PATH, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_DISABLE_PRODUCTION_MODE, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS } from "./config.js";
 
+import { list } from "./list.js";
+import { logger } from "./logger.js";
+
 export interface Package {
     name: string;
     version: string;
@@ -34,7 +37,17 @@ export function program(pkg: Package) {
     program.name(pkg.name).version(pkg.version, "-v, --version", `version for ${pkg.name}`);
     program.command("completion").description("Generate the autocompletion script for the specified shell");
     program.command("help").description("Display help for command");
+    program.command("list")
+        .showHelpAfterError()
+        .description("List all compatible output modules for a given Substreams package")
+        .argument("<spkg>", "URL or IPFS hash of Substreams package")
+        .action(async spkg => {
+            const modules = await list(spkg)
+            logger.info('list', { modules })
+            process.stdout.write(JSON.stringify(modules) + "\n")
+        });
     program.showHelpAfterError();
+
     return program;
 }
 
