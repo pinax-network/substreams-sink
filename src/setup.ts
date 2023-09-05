@@ -10,6 +10,7 @@ import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
 import { onRestartInactivitySeconds } from "./restartInactivitySeconds.js";
 import { applyParams } from "./applyParams.js";
+import { health } from "./health.js";
 
 export async function setup(options: RunOptions) {
     // Configure logging with TSLog
@@ -36,6 +37,9 @@ export async function setup(options: RunOptions) {
 
     // Adding default headers
     headers.set("User-Agent", "substreams-sink");
+
+    // Health check
+    health();
 
     // Apply params
     if (params.length && substreamPackage.modules) {
