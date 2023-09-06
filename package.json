@@ -41,13 +41,13 @@
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@substreams/core": "^0.1.18",
-        "@substreams/manifest": "^0.0.8",
-        "@substreams/node": "^0.2.0",
+        "@substreams/core": "^0.1.19",
+        "@substreams/manifest": "^0.0.9",
+        "@substreams/node": "^0.2.1",
         "commander": "latest",
         "dotenv": "latest",
-        "node-fetch": "^3.3.2",
-        "prom-client": "^14.2.0",
+        "node-fetch": "latest",
+        "prom-client": "latest",
         "tslog": "latest"
     },
     "devDependencies": {
