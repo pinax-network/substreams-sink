@@ -82,10 +82,7 @@ export async function setup(options: RunOptions) {
     await setTimeout(options.delayBeforeStart);
 
     // Restart on inactivity
-    // only activate once first cursor is received
-    emitter.once("cursor", () => {
-        onRestartInactivitySeconds(emitter, options.restartInactivitySeconds);
-    });
+    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds, stopBlockNum !== undefined);
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }

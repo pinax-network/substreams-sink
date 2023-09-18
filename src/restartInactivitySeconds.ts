@@ -4,7 +4,7 @@ import { logger } from "./logger.js";
 
 const CHECK_INACTIVITY_INTERVAL = 1000;
 
-export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactivitySeconds: number) {
+export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactivitySeconds: number, hasStopBlock: boolean) {
     let lastUpdate = now();
     let isFinished = false;
 
@@ -17,11 +17,13 @@ export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactiv
         await setTimeout(CHECK_INACTIVITY_INTERVAL);
         checkInactivity();
     }
+
+    // Check for inactivity after starting
     emitter.on("clock", clock => {
         lastUpdate = now();
-        if (clock.number >= emitter.request.stopBlockNum - 1n) {
+        if (hasStopBlock && clock.number >= emitter.request.stopBlockNum - 1n) {
             isFinished = true;
-        };
+        }
     });
     checkInactivity();
 }
