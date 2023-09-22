@@ -90,7 +90,7 @@ export function onPrometheusMetrics(emitter: BlockEmitter) {
 }
 
 export function handleSession(session: SessionInit) {
-    logger.info("session", session);
+    logger.info("session", { traceId: String(session.traceId), resolvedStartBlock: String(session.resolvedStartBlock), linearHandoffBlock: String(session.linearHandoffBlock), maxParallelWorkers: String(session.maxParallelWorkers) });
     const labelNames = ["trace_id", "resolved_start_block", "linear_handoff_block", "max_parallel_workers"];
     const gauge = registerGauge("session", "Substreams Session", labelNames) as Gauge;
     gauge.labels({
