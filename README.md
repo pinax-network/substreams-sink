@@ -54,7 +54,7 @@ Options:
   --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
   --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
   --collect-default-metrics <boolean>  Collect default metrics (default: false, env: COLLECT_DEFAULT_METRICS)
-  --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: [], env: HEADERS)
+  --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: {}, env: HEADERS)
   --verbose                            Enable verbose logging (default: false, env: VERBOSE)
   -h, --help                           display help for command
 ```
@@ -63,7 +63,7 @@ Options:
 
 ```js
 import pkg from "./package.json" assert { type: "json" };
-import { commander, setup, prometheus, http, logger } from "substreams-sink";
+import { commander, setup, prometheus, http, logger } from "./dist/index.js";
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
@@ -73,9 +73,9 @@ logger.setName(pkg.name);
 // Custom Prometheus Counters
 const customCounter = prometheus.registerCounter("custom_counter");
 
-command.action(async (options: commander.RunOptions) => {
+command.action(async options => {
   // Setup sink for Block Emitter
-  const {emitter} = await setup(options);
+  const { emitter } = await setup(options);
 
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
