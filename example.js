@@ -20,7 +20,6 @@ command.action(async options => {
     console.log(message);
     console.log(cursor);
     console.log(clock);
-    process.exit()
   });
 
   // Setup HTTP server & Prometheus metrics
