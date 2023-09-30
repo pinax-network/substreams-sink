@@ -11,7 +11,7 @@ class SinkLogger extends Logger<ILogObj> {
     this.settings.name = name;
   }
 
-  public enable(type: "json" | "pretty" = "json") {
+  public enable(type: "json" | "pretty" = "pretty") {
     this.settings.type = type;
     this.settings.minLevel = 0;
   }

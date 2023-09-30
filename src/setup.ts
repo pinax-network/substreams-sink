@@ -33,7 +33,7 @@ export async function setup(options: RunOptions) {
     const params = options.params;
     const headers = options.headers;
     const cursorPath = options.cursorPath;
-    const productionMode = !options.disableProductionMode;
+    const productionMode = options.productionMode;
 
     // Adding default headers
     headers.set("User-Agent", "substreams-sink");
@@ -51,6 +51,7 @@ export async function setup(options: RunOptions) {
 
     // Connect Transport
     const startCursor = await cursor.readCursor(cursorPath);
+    console.log({startBlockNum, stopBlockNum, startCursor});
     const registry = createRegistry(substreamPackage);
     const transport = createDefaultTransport(baseUrl, token, registry, headers);
     const request = createRequest({

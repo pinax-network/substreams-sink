@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Command, Option } from "commander";
-import { DEFAULT_CURSOR_PATH, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_DISABLE_PRODUCTION_MODE, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS } from "./config.js";
+import { DEFAULT_CURSOR_PATH, DEFAULT_RESTART_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_SUBSTREAMS_API_TOKEN, DEFAULT_AUTH_ISSUE_URL, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS, DEFAULT_PRODUCTION_MODE } from "./config.js";
 
 import { list } from "./list.js";
 import { logger } from "./logger.js";
@@ -22,7 +22,7 @@ export interface RunOptions {
     authIssueUrl: string;
     delayBeforeStart: number;
     cursorPath: string;
-    disableProductionMode: boolean;
+    productionMode: boolean;
     restartInactivitySeconds: number;
     hostname: string;
     port: number;
@@ -86,7 +86,7 @@ export function run(program: Command, pkg: Package) {
         .addOption(new Option("--auth-issue-url <string>", "URL used to issue a token").default(DEFAULT_AUTH_ISSUE_URL).env("AUTH_ISSUE_URL"))
         .addOption(new Option("--delay-before-start <int>", "Delay (ms) before starting Substreams").default(DEFAULT_DELAY_BEFORE_START).env("DELAY_BEFORE_START"))
         .addOption(new Option("--cursor-path <string>", "File path or URL to cursor lock file").default(DEFAULT_CURSOR_PATH).env("CURSOR_PATH"))
-        .addOption(new Option("--disable-production-mode", "Disable production mode, allows debugging modules logs, stops high-speed parallel processing").default(DEFAULT_DISABLE_PRODUCTION_MODE).env("DISABLE_PRODUCTION_MODE"))
+        .addOption(new Option("--production-mode <boolean>", "Enable production mode, allows cached substreams data if available").default(DEFAULT_PRODUCTION_MODE).env("PRODUCTION_MODE"))
         .addOption(new Option("--restart-inactivity-seconds <int>", "If set, the sink will restart when inactive for over a certain amount of seconds").default(DEFAULT_RESTART_INACTIVITY_SECONDS).env("RESTART_INACTIVITY_SECONDS"))
         .addOption(new Option("--hostname <string>", "The process will listen on this hostname for any HTTP and Prometheus metrics requests").default(DEFAULT_HOSTNAME).env("HOSTNAME"))
         .addOption(new Option("--port <int>", "The process will listen on this port for any HTTP and Prometheus metrics requests").default(DEFAULT_PORT).env("PORT"))

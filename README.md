@@ -48,7 +48,7 @@ Options:
   --auth-issue-url <string>            URL used to issue a token (default: "https://auth.pinax.network/v1/auth/issue", env: AUTH_ISSUE_URL)
   --delay-before-start <int>           Delay (ms) before starting Substreams (default: 0, env: DELAY_BEFORE_START)
   --cursor-path <string>               File path or URL to cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
-  --disable-production-mode            Disable production mode, allows debugging modules logs, stops high-speed parallel processing (default: false, env: DISABLE_PRODUCTION_MODE)
+  --production-mode <boolean>          Enable production mode, allows cached substreams data if available (default: false, env: PRODUCTION_MODE)
   --restart-inactivity-seconds <int>   If set, the sink will restart when inactive for over a certain amount of seconds (default: 300, env: RESTART_INACTIVITY_SECONDS)
   --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
   --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
