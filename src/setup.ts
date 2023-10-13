@@ -14,7 +14,7 @@ import { health } from "./health.js";
 
 export async function setup(options: RunOptions) {
     // Configure logging with TSLog
-    if (options.verbose) logger.enable();
+    if (String(options.verbose) === "true") logger.enable();
 
     // Download Substream package
     const manifest = options.manifest;
@@ -33,7 +33,8 @@ export async function setup(options: RunOptions) {
     const params = options.params;
     const headers = options.headers;
     const cursorPath = options.cursorPath;
-    const productionMode = options.productionMode;
+    const productionMode = String(options.productionMode) === "true";
+    const finalBlocksOnly = String(options.finalBlocksOnly) === "true";
 
     // Adding default headers
     headers.set("User-Agent", "substreams-sink");
@@ -51,7 +52,6 @@ export async function setup(options: RunOptions) {
 
     // Connect Transport
     const startCursor = await cursor.readCursor(cursorPath);
-    console.log({startBlockNum, stopBlockNum, startCursor});
     const registry = createRegistry(substreamPackage);
     const transport = createDefaultTransport(baseUrl, token, registry, headers);
     const request = createRequest({
@@ -61,6 +61,7 @@ export async function setup(options: RunOptions) {
         stopBlockNum,
         productionMode,
         startCursor,
+        finalBlocksOnly,
     });
 
     // Substreams Block Emitter
@@ -70,7 +71,7 @@ export async function setup(options: RunOptions) {
     const moduleHash = await createModuleHashHex(substreamPackage.modules, outputModule);
 
     // Handle Prometheus Metrics
-    if (options.collectDefaultMetrics) {
+    if (String(options.collectDefaultMetrics) === "true") {
         prometheus.client.collectDefaultMetrics({ labels: options.metricsLabels });
     }
     prometheus.handleManifest(emitter, moduleHash, options);

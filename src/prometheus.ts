@@ -102,8 +102,8 @@ export function handleSession(session: SessionInit) {
 }
 
 export function handleManifest(emitter: BlockEmitter, moduleHash: string, options: RunOptions) {
-    logger.info("manifest", { moduleHash, manifest: options.manifest, substreamsEndpoint: options.substreamsEndpoint });
-    const labelNames = ["module_hash", "manifest", "output_module", "substreams_endpoint", "start_block_num", "stop_block_num", "production_mode"];
+    logger.info("manifest", { moduleHash, manifest: options.manifest, substreamsEndpoint: options.substreamsEndpoint, finalBlocksOnly: options.finalBlocksOnly, production_mode: options.productionMode });
+    const labelNames = ["module_hash", "manifest", "output_module", "substreams_endpoint", "start_block_num", "stop_block_num", "production_mode", "final_blocks_only"];
     const gauge = registerGauge("manifest", "Substreams manifest and sha256 hash of map module", labelNames) as Gauge;
     gauge.labels({
         module_hash: moduleHash,
@@ -112,6 +112,7 @@ export function handleManifest(emitter: BlockEmitter, moduleHash: string, option
         substreams_endpoint: options.substreamsEndpoint,
         start_block_num: String(emitter.request.startBlockNum),
         stop_block_num: String(emitter.request.stopBlockNum),
-        production_mode: String(emitter.request.productionMode)
+        production_mode: String(emitter.request.productionMode),
+        final_blocks_only: String(emitter.request.finalBlocksOnly),
     }).set(1);
 }
