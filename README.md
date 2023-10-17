@@ -13,6 +13,7 @@
 ### Further resources
 
 - [**Substreams** documentation](https://substreams.streamingfast.io)
+- [Subtreams sink project template Github repo](https://github.com/pinax-network/substreams-sink-template)
 
 ## 🚀 Quick start
 
@@ -26,7 +27,7 @@ npm install substreams-sink
 
 - [x] includes [Commander.js](https://github.com/tj/commander.js/) helper CLI
 - [x] includes [tslog](https://github.com/fullstack-build/tslog) helper logger
-- [x] handle reading/saving **Substreams** `cursor.lock` file
+- [x] handle reading/saving **Substreams** `cursor` from file or URL
 - [x] reads config `.env` file
 - [x] includes Prometheus metrics helpers
 
@@ -48,15 +49,16 @@ Options:
   --auth-issue-url <string>            URL used to issue a token (default: "https://auth.pinax.network/v1/auth/issue", env: AUTH_ISSUE_URL)
   --delay-before-start <int>           Delay (ms) before starting Substreams (default: 0, env: DELAY_BEFORE_START)
   --cursor-path <string>               File path or URL to cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
-  --production-mode <boolean>          Enable production mode, allows cached substreams data if available (default: false, env: PRODUCTION_MODE)
+  --http-cursor-auth <string>          Basic auth credentials for http cursor (ex: username:password) (env: HTTP_CURSOR_AUTH)
+  --production-mode <boolean>          Enable production mode, allows cached substreams data if available (default: "false", env: PRODUCTION_MODE)
   --restart-inactivity-seconds <int>   If set, the sink will restart when inactive for over a certain amount of seconds (default: 300, env: RESTART_INACTIVITY_SECONDS)
   --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
   --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
   --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
-  --collect-default-metrics <boolean>  Collect default metrics (default: false, env: COLLECT_DEFAULT_METRICS)
+  --collect-default-metrics <boolean>  Collect default metrics (default: "false", env: COLLECT_DEFAULT_METRICS)
   --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: {}, env: HEADERS)
-    --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
-  --verbose                            Enable verbose logging (default: false, env: VERBOSE)
+  --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
+  --verbose <boolean>                  Enable verbose logging (default: "false", env: VERBOSE)
   -h, --help                           display help for command
 ```
 
