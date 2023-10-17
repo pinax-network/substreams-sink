@@ -7,8 +7,9 @@ export function onCursor(emitter: BlockEmitter, cursorPath: string) {
     });
 }
 
-export async function readCursor(cursorPath: string) {
-    const response = await fetch(cursorPath);
+export async function readCursor(cursorPath: string, httpCursorAuth?: string) {
+    const headers = httpCursorAuth ? { Authorization: `Basic ${httpCursorAuth}` } : undefined;
+    const response = await fetch(cursorPath, { headers });
 
     if (!response.ok) {
         return "";

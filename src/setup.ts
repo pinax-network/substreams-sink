@@ -33,6 +33,7 @@ export async function setup(options: RunOptions) {
     const params = options.params;
     const headers = options.headers;
     const cursorPath = options.cursorPath;
+    const httpCursorAuth = options.httpCursorAuth;
     const productionMode = String(options.productionMode) === "true";
     const finalBlocksOnly = String(options.finalBlocksOnly) === "true";
 
@@ -51,7 +52,7 @@ export async function setup(options: RunOptions) {
     const cursor = cursorPath.startsWith("http") ? httpCursor : fileCursor;
 
     // Connect Transport
-    const startCursor = await cursor.readCursor(cursorPath);
+    const startCursor = await cursor.readCursor(cursorPath, httpCursorAuth);
     const registry = createRegistry(substreamPackage);
     const transport = createDefaultTransport(baseUrl, token, registry, headers);
     const request = createRequest({
