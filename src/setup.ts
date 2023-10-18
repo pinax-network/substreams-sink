@@ -8,7 +8,7 @@ import * as fileCursor from "./cursor/fileCursor.js";
 import * as httpCursor from "./cursor/httpCursor.js";
 import * as prometheus from "./prometheus.js";
 import { logger } from "./logger.js";
-import { onRestartInactivitySeconds } from "./restartInactivitySeconds.js";
+import { onInactivitySeconds } from "./inactivitySeconds.js";
 import { applyParams } from "./applyParams.js";
 import { health } from "./health.js";
 
@@ -84,8 +84,8 @@ export async function setup(options: RunOptions) {
     // Adds delay before using sink
     await setTimeout(options.delayBeforeStart);
 
-    // Restart on inactivity
-    onRestartInactivitySeconds(emitter, options.restartInactivitySeconds, stopBlockNum !== undefined);
+    // Stop on inactivity
+    onInactivitySeconds(emitter, options.inactivitySeconds, stopBlockNum !== undefined);
 
     return { emitter, substreamPackage, moduleHash, startCursor };
 }

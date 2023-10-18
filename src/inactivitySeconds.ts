@@ -4,13 +4,13 @@ import { logger } from "./logger.js";
 
 const CHECK_INACTIVITY_INTERVAL = 1000;
 
-export function onRestartInactivitySeconds(emitter: BlockEmitter, restartInactivitySeconds: number, hasStopBlock: boolean) {
+export function onInactivitySeconds(emitter: BlockEmitter, inactivitySeconds: number, hasStopBlock: boolean) {
     let lastUpdate = now();
     let isFinished = false;
 
     async function checkInactivity() {
-        if (now() - lastUpdate > restartInactivitySeconds) {
-            logger.error(`Restarting due to inactivity for ${restartInactivitySeconds} seconds`);
+        if (now() - lastUpdate > inactivitySeconds) {
+            logger.error(`Process will exit due to inactivity for ${inactivitySeconds} seconds`);
             process.exit(1); // force quit
         }
         if (isFinished) return; // exit out of the loop
