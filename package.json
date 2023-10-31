@@ -41,9 +41,9 @@
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@substreams/core": "^0.1.19",
-        "@substreams/manifest": "^0.0.9",
-        "@substreams/node": "^0.2.2",
+        "@substreams/core": "^0.6.2",
+        "@substreams/manifest": "^0.5.1",
+        "@substreams/node": "^0.3.0",
         "commander": "latest",
         "dotenv": "latest",
         "node-fetch": "latest",
