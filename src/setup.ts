@@ -2,7 +2,6 @@ import { createRegistry, createRequest, createModuleHashHex, parseAuthorization 
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
-
 import type { RunOptions } from "./commander.js";
 import * as fileCursor from "./cursor/fileCursor.js";
 import * as httpCursor from "./cursor/httpCursor.js";

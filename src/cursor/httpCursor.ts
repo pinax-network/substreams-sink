@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import type { BlockEmitter } from "@substreams/node";
 
 export function onCursor(emitter: BlockEmitter, cursorPath: string) {
