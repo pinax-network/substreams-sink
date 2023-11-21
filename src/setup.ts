@@ -23,7 +23,12 @@ export async function setup(options: RunOptions) {
     // auth API token
     // https://app.streamingfast.io/
     const token = await parseAuthorization(options.substreamsApiToken, options.authIssueUrl);
-    const baseUrl = options.substreamsEndpoint;
+    let baseUrl = options.substreamsEndpoint;
+
+    // append https if not present
+    if ( baseUrl.match(/http/) === null ) {
+        baseUrl = `https://${baseUrl}`;
+    }
 
     // User parameters
     const outputModule = options.moduleName;
