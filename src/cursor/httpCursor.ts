@@ -13,7 +13,29 @@ export async function readCursor(cursorPath: string, httpCursorAuth?: string) {
     if (!response.ok) {
         return "";
     }
+    const text = await response.text();
 
-    const data: any = await response.json();
-    return data[0] && data[0].Value ? data[0].Value : "";
+    /**
+     * Consul KV
+     * https://developer.hashicorp.com/consul/api-docs/kv
+     *
+     * @example
+     * [{"Value":"n-5SB30M-16YouthlRFszqWwLpcyB1JpXQPsLRNL1..."}]
+     */
+    try {
+        const data = JSON.parse(text) as { Value: string }[];
+        if ( data.length ) {
+            const value = data[0]?.Value;
+            if ( value ) return value;
+        }
+    /**
+     * Simple HTTP text response
+     *
+     * @example
+     * n-5SB30M-16YouthlRFszqWwLpcyB1JpXQPsLRNL1...
+     */
+    } catch (error) {
+        if ( text ) return text;
+    }
+    return "";
 }
