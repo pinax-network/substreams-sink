@@ -26,7 +26,7 @@ command.action(async options => {
   http.listen(options);
 
   // Start streaming
-  await emitter.start();
+  emitter.start();
   http.server.close();
   console.log("✅ finished");
 })
