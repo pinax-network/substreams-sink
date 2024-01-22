@@ -19,7 +19,7 @@ export function onInactivitySeconds(emitter: BlockEmitter, inactivitySeconds: nu
     }
 
     // Check for inactivity after starting
-    emitter.on("clock", clock => {
+    emitter.on("anyMessage", (message, cursor, clock) => {
         lastUpdate = now();
         if (hasStopBlock && clock.number >= emitter.request.stopBlockNum - 1n) {
             isFinished = true;
