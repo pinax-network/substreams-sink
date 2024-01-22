@@ -1,4 +1,4 @@
-import { createRegistry, createRequest, createModuleHashHex, parseAuthorization } from "@substreams/core";
+import { createRegistry, createRequest, createModuleHashHex } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
@@ -10,6 +10,7 @@ import { logger } from "./logger.js";
 import { onInactivitySeconds } from "./inactivitySeconds.js";
 import { applyParams } from "./applyParams.js";
 import { health } from "./health.js";
+import { parseAuthorization } from "./parseAuthorization.js";
 
 export async function setup(options: RunOptions) {
     // Configure logging with TSLog
@@ -26,7 +27,7 @@ export async function setup(options: RunOptions) {
     let baseUrl = options.substreamsEndpoint;
 
     // append https if not present
-    if ( baseUrl.match(/http/) === null ) {
+    if (baseUrl.match(/http/) === null) {
         baseUrl = `https://${baseUrl}`;
     }
 
