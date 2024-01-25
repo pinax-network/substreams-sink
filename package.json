@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink",
-    "version": "0.13.7",
+    "version": "0.13.8",
     "description": "Substreams Sink",
     "type": "module",
     "exports": "./dist/index.js",
@@ -46,7 +46,7 @@
     "dependencies": {
         "@substreams/core": "^0.12.0",
         "@substreams/manifest": "^0.11.0",
-        "@substreams/node": "^0.5.2",
+        "@substreams/node": "^0.5.3",
         "commander": "latest",
         "dotenv": "latest",
         "prom-client": "latest",
