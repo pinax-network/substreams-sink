@@ -4,11 +4,7 @@ import { logger } from "./logger.js";
 
 const CHECK_INACTIVITY_INTERVAL = 1000;
 
-export function onInactivitySeconds(
-    emitter: BlockEmitter,
-    inactivitySeconds: number,
-    hasStopBlock: boolean
-) {
+export function onInactivitySeconds(emitter: BlockEmitter, inactivitySeconds: number, hasStopBlock: boolean) {
     let lastUpdate = now();
     let isFinished = false;
     let lastTotalBytesRead = 0n;
@@ -22,9 +18,7 @@ export function onInactivitySeconds(
         }
 
         if (now() - lastUpdate > inactivitySeconds) {
-            logger.error(
-                `Process will exit due to inactivity for ${inactivitySeconds} seconds`
-            );
+            logger.error(`Process will exit due to inactivity for ${inactivitySeconds} seconds`);
             process.exit(1); // force quit
         }
         if (isFinished) return; // exit out of the loop
