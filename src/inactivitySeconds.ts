@@ -1,22 +1,15 @@
 import type { BlockEmitter } from "@substreams/node";
 import { setTimeout } from "timers/promises";
 import { logger } from "./logger.js";
+import { substreams_sink_progress_message } from "./prometheus.js";
 
 const CHECK_INACTIVITY_INTERVAL = 1000;
 
 export function onInactivitySeconds(emitter: BlockEmitter, inactivitySeconds: number, hasStopBlock: boolean) {
     let lastUpdate = now();
     let isFinished = false;
-    let lastTotalBytesRead = 0n;
-    let currentTotalBytesRead = 0n;
 
     async function checkInactivity() {
-        // Refresh lastUpdate/lastTotalBytesRead if totalBytesRead is increasing
-        if (currentTotalBytesRead > lastTotalBytesRead) {
-            lastUpdate = now();
-            lastTotalBytesRead = currentTotalBytesRead;
-        }
-
         if (now() - lastUpdate > inactivitySeconds) {
             logger.error(`Process will exit due to inactivity for ${inactivitySeconds} seconds`);
             process.exit(1); // force quit
@@ -34,10 +27,26 @@ export function onInactivitySeconds(emitter: BlockEmitter, inactivitySeconds: nu
         }
     });
 
+    emitter.on("close", error => {
+        if ( error ) {
+            console.error(error);
+            process.exit(1); // force quit
+        }
+        lastUpdate = now();
+        isFinished = true;
+    });
+
+    emitter.on("fatalError", error => {
+        console.error(error);
+        process.exit(1); // force quit
+    });
+
     // Check progress events for inactivity after starting
     emitter.on("progress", (progress) => {
-        if (progress.processedBytes) {
-            currentTotalBytesRead = progress.processedBytes.totalBytesRead;
+        const totalBytesRead = Number(progress.processedBytes?.totalBytesRead ?? 0);
+        if (totalBytesRead > 0) {
+            lastUpdate = now();
+            substreams_sink_progress_message?.inc(totalBytesRead);
         }
     });
 
