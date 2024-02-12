@@ -15,6 +15,7 @@ export function onInactivitySeconds(
 	let currentTotalBytesRead = 0n;
 
 	async function checkInactivity() {
+		// Refresh lastUpdate/lastTotalBytesRead if totalBytesRead is increasing
 		if (currentTotalBytesRead > lastTotalBytesRead) {
 			lastUpdate = now();
 			lastTotalBytesRead = currentTotalBytesRead;
@@ -31,7 +32,7 @@ export function onInactivitySeconds(
 		checkInactivity();
 	}
 
-	// Check for inactivity after starting
+	// Check clock events for inactivity after starting
 	emitter.on("clock", (clock) => {
 		lastUpdate = now();
 		if (hasStopBlock && clock.number >= emitter.request.stopBlockNum - 1n) {
@@ -39,6 +40,7 @@ export function onInactivitySeconds(
 		}
 	});
 
+	// Check progress events for inactivity after starting
 	emitter.on("progress", (progress) => {
 		if (progress.processedBytes) {
 			currentTotalBytesRead = progress.processedBytes.totalBytesRead;
