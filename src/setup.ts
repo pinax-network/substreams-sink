@@ -1,5 +1,6 @@
 import { createRegistry, createRequest, createModuleHashHex } from "@substreams/core";
-import { BlockEmitter, createDefaultTransport } from "@substreams/node";
+import { createNodeTransport } from "@substreams/node/createNodeTransport";
+import { BlockEmitter } from "@substreams/node";
 import { readPackage } from "@substreams/manifest";
 import { setTimeout } from "timers/promises";
 import type { RunOptions } from "./commander.js";
@@ -10,7 +11,6 @@ import { logger } from "./logger.js";
 import { onInactivitySeconds } from "./inactivitySeconds.js";
 import { applyParams } from "./applyParams.js";
 import { health } from "./health.js";
-import { parseAuthorization } from "./parseAuthorization.js";
 
 export async function setup(options: RunOptions) {
     // Configure logging with TSLog
@@ -21,10 +21,9 @@ export async function setup(options: RunOptions) {
     const substreamPackage = await readPackage(manifest);
     if (!substreamPackage.modules) throw new Error("No modules found in substream package");
 
-    // auth API token
-    // https://app.streamingfast.io/
-    const token = await parseAuthorization(options.substreamsApiToken, options.authIssueUrl);
+    // Substreams endpoint
     let baseUrl = options.substreamsEndpoint;
+    const token = options.substreamsApiToken ?? options.substreamsApiKey;
 
     // append https if not present
     if (baseUrl.match(/http/) === null) {
@@ -43,7 +42,7 @@ export async function setup(options: RunOptions) {
     const finalBlocksOnly = String(options.finalBlocksOnly) === "true";
 
     // Adding default headers
-    headers.set("User-Agent", "substreams-sink");
+    headers.set("X-User-Agent", "substreams-sink");
 
     // Health check
     health();
@@ -59,7 +58,7 @@ export async function setup(options: RunOptions) {
     // Connect Transport
     const startCursor = await cursor.readCursor(cursorPath, httpCursorAuth);
     const registry = createRegistry(substreamPackage);
-    const transport = createDefaultTransport(baseUrl, token, registry, headers);
+    const transport = createNodeTransport(baseUrl, token, registry, headers);
     const request = createRequest({
         substreamPackage,
         outputModule,

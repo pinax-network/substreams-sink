@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink",
-    "version": "0.13.8",
+    "version": "0.14.0",
     "description": "Substreams Sink",
     "type": "module",
     "exports": "./dist/index.js",
@@ -22,7 +22,7 @@
         "src"
     ],
     "engines": {
-        "node": ">=18"
+        "node": ">=20"
     },
     "contributors": [
         {
@@ -38,15 +38,15 @@
             "email": "francois@pinax.network"
         }
     ],
-    "license": "MIT OR Apache-2.0",
+    "license": "MIT",
     "scripts": {
         "build": "tsc",
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@substreams/core": "^0.12.0",
-        "@substreams/manifest": "^0.11.0",
-        "@substreams/node": "^0.5.3",
+        "@substreams/core": "^0.15.1",
+        "@substreams/manifest": "^0.14.1",
+        "@substreams/node": "^0.6.2",
         "commander": "latest",
         "dotenv": "latest",
         "prom-client": "latest",

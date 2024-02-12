@@ -53,7 +53,7 @@ const substreams_sink_data_message = registerCounter("substreams_sink_data_messa
 const substreams_sink_data_message_size_bytes = registerCounter("substreams_sink_data_message_size_bytes", "The total size of in bytes of all data message received");
 const substreams_sink_undo_message = registerCounter("substreams_sink_undo_message", "The number of block undo message received");
 // const substreams_sink_unknown_message = registerCounter("substreams_sink_unknown_message", "The number of unknown message received");
-// const substreams_sink_progress_message = registerCounter("substreams_sink_progress_message", "The number of progress message received", ["module"]);
+export const substreams_sink_progress_message = registerCounter("substreams_sink_progress_message", "The number of progress message received", ["module"]);
 
 // Gauges
 // const trace_id = registerGauge("trace_id", "Substreams session trace id", ["trace_id"]);
@@ -78,6 +78,10 @@ function updateBlockDataMetrics(block: BlockScopedData) {
     substreams_sink_data_message?.inc(1);
     substreams_sink_data_message_size_bytes?.inc(block.toBinary().byteLength);
     substreams_sink_backprocessing_completion?.set(1);
+}
+
+function updateTotalBytesRead(bytes: number) {
+    // substreams_sink_message_size_bytes?.inc(bytes);
 }
 
 export function onPrometheusMetrics(emitter: BlockEmitter) {

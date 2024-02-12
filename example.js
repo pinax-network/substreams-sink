@@ -12,7 +12,14 @@ const customCounter = prometheus.registerCounter("custom_counter");
 command.action(async options => {
   // Setup sink for Block Emitter
   const { emitter } = await setup(options);
-  console.log("setup")
+
+  emitter.on("session", (session) => {
+    console.log(session);
+  });
+
+  emitter.on("progress", (progress) => {
+    console.log(progress);
+  });
 
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
@@ -25,9 +32,12 @@ command.action(async options => {
   // Setup HTTP server & Prometheus metrics
   http.listen(options);
 
-  // Start streaming
+  // Start the stream
   emitter.start();
-  http.server.close();
-  console.log("✅ finished");
+
+  emitter.on("close", () => {
+    http.server.close();
+    console.log("✅ finished");
+  })
 })
 program.parse();
