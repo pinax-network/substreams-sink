@@ -1,6 +1,7 @@
 import type { BlockEmitter } from "@substreams/node";
 import { setTimeout } from "timers/promises";
 import { logger } from "./logger.js";
+import { substreams_sink_progress_message } from "./prometheus.js";
 
 const CHECK_INACTIVITY_INTERVAL = 1000;
 
@@ -18,13 +19,37 @@ export function onInactivitySeconds(emitter: BlockEmitter, inactivitySeconds: nu
         checkInactivity();
     }
 
-    // Check for inactivity after starting
-    emitter.on("anyMessage", (message, cursor, clock) => {
+    // Check clock events for inactivity after starting
+    emitter.on("clock", (clock) => {
         lastUpdate = now();
         if (hasStopBlock && clock.number >= emitter.request.stopBlockNum - 1n) {
             isFinished = true;
         }
     });
+
+    emitter.on("close", error => {
+        if ( error ) {
+            console.error(error);
+            process.exit(1); // force quit
+        }
+        lastUpdate = now();
+        isFinished = true;
+    });
+
+    emitter.on("fatalError", error => {
+        console.error(error);
+        process.exit(1); // force quit
+    });
+
+    // Check progress events for inactivity after starting
+    emitter.on("progress", (progress) => {
+        const totalBytesRead = Number(progress.processedBytes?.totalBytesRead ?? 0);
+        if (totalBytesRead > 0) {
+            lastUpdate = now();
+            substreams_sink_progress_message?.inc(totalBytesRead);
+        }
+    });
+
     checkInactivity();
 }
 
