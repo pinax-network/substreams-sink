@@ -15,6 +15,10 @@
 - [**Substreams** documentation](https://substreams.streamingfast.io)
 - [Subtreams sink project template Github repo](https://github.com/pinax-network/substreams-sink-template)
 
+## Get Substreams API Key
+- https://app.pinax.network
+- https://app.streamingfast.io/
+
 ## 🚀 Quick start
 
 ### Installation
@@ -64,9 +68,25 @@ Options:
 
 ### Example
 
+**.env**
+
+```env
+# Get Substreams API Key
+# https://app.pinax.network
+# https://app.streamingfast.io/
+SUBSTREAMS_API_KEY=...
+SUBSTREAMS_ENDPOINT=https://eth.substreams.pinax.network:443
+
+# SPKG
+MANIFEST=https://github.com/pinax-network/substreams/releases/download/blocks-v0.1.0/blocks-v0.1.0.spkg
+MODULE_NAME=map_blocks
+START_BLOCK=-10
+```
+
+**example.js**
 ```js
 import pkg from "./package.json" assert { type: "json" };
-import { commander, setup, prometheus, http, logger } from "./dist/index.js";
+import { commander, setup, prometheus, http, logger } from "substreams-sink";
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
@@ -80,6 +100,14 @@ command.action(async options => {
   // Setup sink for Block Emitter
   const { emitter } = await setup(options);
 
+  emitter.on("session", (session) => {
+    console.log(session);
+  });
+
+  emitter.on("progress", (progress) => {
+    console.log(progress);
+  });
+
   // Stream Blocks
   emitter.on("anyMessage", (message, cursor, clock) => {
     customCounter?.inc(1);
@@ -91,9 +119,13 @@ command.action(async options => {
   // Setup HTTP server & Prometheus metrics
   http.listen(options);
 
-  // Start streaming
-  await emitter.start();
-  http.server.close();
+  // Start the stream
+  emitter.start();
+
+  emitter.on("close", () => {
+    http.server.close();
+    console.log("✅ finished");
+  })
 })
 program.parse();
 ```
