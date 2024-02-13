@@ -23,7 +23,8 @@ export async function setup(options: RunOptions) {
 
     // Substreams endpoint
     let baseUrl = options.substreamsEndpoint;
-    const token = options.substreamsApiToken ?? options.substreamsApiKey;
+    const token = options.substreamsApiKey ?? options.substreamsApiToken;
+    if ( token.includes(".")) throw new Error("JWT token is not longer supported, please use Substreams API key instead");
 
     // append https if not present
     if (baseUrl.match(/http/) === null) {
