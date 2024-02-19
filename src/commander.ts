@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Command, Option } from "commander";
-import { DEFAULT_CURSOR_PATH, DEFAULT_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS, DEFAULT_PRODUCTION_MODE, DEFAULT_FINAL_BLOCKS_ONLY } from "./config.js";
+import { DEFAULT_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS, DEFAULT_PRODUCTION_MODE, DEFAULT_FINAL_BLOCKS_ONLY } from "./config.js";
 
 import { list } from "./list.js";
 import { logger } from "./logger.js";
@@ -21,8 +21,7 @@ export interface RunOptions {
     substreamsApiKey: string;
     substreamsApiToken: string; // Deprecated
     delayBeforeStart: number;
-    cursorPath: string;
-    httpCursorAuth: string;
+    cursor: string;
     productionMode: string;
     inactivitySeconds: number;
     hostname: string;
@@ -74,10 +73,6 @@ function handleHeaders(value: string, previous: Headers) {
     return headers;
 }
 
-function handleHttpCursorAuth(value: string) {
-    return btoa(value);
-}
-
 export function run(program: Command, pkg: Package) {
     return program.command("run")
         .showHelpAfterError()
@@ -91,8 +86,7 @@ export function run(program: Command, pkg: Package) {
         .addOption(new Option("--substreams-api-key <string>", "API key for the Substream endpoint").env("SUBSTREAMS_API_KEY"))
         .addOption(new Option("--substreams-api-token <string>", "(DEPRECATED) API token for the Substream endpoint").hideHelp(true).env("SUBSTREAMS_API_TOKEN"))
         .addOption(new Option("--delay-before-start <int>", "Delay (ms) before starting Substreams").default(DEFAULT_DELAY_BEFORE_START).env("DELAY_BEFORE_START"))
-        .addOption(new Option("--cursor-path <string>", "File path or URL to cursor lock file").default(DEFAULT_CURSOR_PATH).env("CURSOR_PATH"))
-        .addOption(new Option("--http-cursor-auth <string>", "Basic auth credentials for http cursor (ex: username:password)").env("HTTP_CURSOR_AUTH").argParser(handleHttpCursorAuth))
+        .addOption(new Option("--cursor <string>", "Cursor to stream from. Leave blank for no cursor"))
         .addOption(new Option("--production-mode <boolean>", "Enable production mode, allows cached Substreams data if available").default(DEFAULT_PRODUCTION_MODE).env("PRODUCTION_MODE"))
         .addOption(new Option("--inactivity-seconds <int>", "If set, the sink will stop when inactive for over a certain amount of seconds").default(DEFAULT_INACTIVITY_SECONDS).env("INACTIVITY_SECONDS"))
         .addOption(new Option("--hostname <string>", "The process will listen on this hostname for any HTTP and Prometheus metrics requests").default(DEFAULT_HOSTNAME).env("HOSTNAME"))
