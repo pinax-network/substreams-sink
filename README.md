@@ -51,8 +51,7 @@ Options:
   -p, --params <string...>             Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY) (default: [], env: PARAMS)
   --substreams-api-key <string>        API key for the Substream endpoint (env: SUBSTREAMS_API_KEY)
   --delay-before-start <int>           Delay (ms) before starting Substreams (default: 0, env: DELAY_BEFORE_START)
-  --cursor-path <string>               File path or URL to cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
-  --http-cursor-auth <string>          Basic auth credentials for http cursor (ex: username:password) (env: HTTP_CURSOR_AUTH)
+  --cursor <string>                    Cursor to stream from. Leave blank for no cursor
   --production-mode <boolean>          Enable production mode, allows cached Substreams data if available (default: "false", env: PRODUCTION_MODE)
   --inactivity-seconds <int>           If set, the sink will stop when inactive for over a certain amount of seconds (default: 300, env: INACTIVITY_SECONDS)
   --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
@@ -79,13 +78,14 @@ SUBSTREAMS_ENDPOINT=https://eth.substreams.pinax.network:443
 # SPKG
 MANIFEST=https://github.com/pinax-network/substreams/releases/download/blocks-v0.1.0/blocks-v0.1.0.spkg
 MODULE_NAME=map_blocks
-START_BLOCK=-10
+START_BLOCK=1000000
+STOP_BLOCK=1000020
 ```
 
 **example.js**
 ```js
 import pkg from "./package.json" assert { type: "json" };
-import { commander, setup, prometheus, http, logger } from "substreams-sink";
+import { commander, setup, prometheus, http, logger, fileCursor } from "substreams-sink";
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
@@ -96,8 +96,11 @@ logger.setName(pkg.name);
 const customCounter = prometheus.registerCounter("custom_counter");
 
 command.action(async options => {
+  // Get cursor from file
+  const cursor = fileCursor.readCursor("cursor.lock");
+
   // Setup sink for Block Emitter
-  const { emitter } = await setup(options);
+  const { emitter } = await setup({...options, cursor});
 
   emitter.on("session", (session) => {
     console.log(session);
@@ -118,13 +121,17 @@ command.action(async options => {
   // Setup HTTP server & Prometheus metrics
   http.listen(options);
 
-  // Start the stream
-  emitter.start();
+  // Save new cursor on each new block emitted
+  fileCursor.onCursor(emitter, "cursor.lock");
 
+  // Close HTTP server on close
   emitter.on("close", () => {
     http.server.close();
     console.log("✅ finished");
   })
+
+  // Start the stream
+  emitter.start();
 })
 program.parse();
 ```
