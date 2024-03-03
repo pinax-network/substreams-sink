@@ -94,7 +94,6 @@ export function onPrometheusMetrics(emitter: BlockEmitter) {
 }
 
 export function handleSession(session: SessionInit) {
-    logger.info("session", { traceId: String(session.traceId), resolvedStartBlock: String(session.resolvedStartBlock), linearHandoffBlock: String(session.linearHandoffBlock), maxParallelWorkers: String(session.maxParallelWorkers) });
     const labelNames = ["trace_id", "resolved_start_block", "linear_handoff_block", "max_parallel_workers"];
     const gauge = registerGauge("session", "Substreams Session", labelNames) as Gauge;
     gauge.labels({
@@ -106,7 +105,6 @@ export function handleSession(session: SessionInit) {
 }
 
 export function handleManifest(emitter: BlockEmitter, moduleHash: string, options: RunOptions) {
-    logger.info("manifest", { moduleHash, manifest: options.manifest, substreamsEndpoint: options.substreamsEndpoint, finalBlocksOnly: options.finalBlocksOnly, productionMode: options.productionMode });
     const labelNames = ["module_hash", "manifest", "output_module", "substreams_endpoint", "start_block_num", "stop_block_num", "production_mode", "final_blocks_only"];
     const gauge = registerGauge("manifest", "Substreams manifest and sha256 hash of map module", labelNames) as Gauge;
     gauge.labels({

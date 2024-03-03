@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { Command, Option } from "commander";
-import { DEFAULT_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_VERBOSE, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_COLLECT_DEFAULT_METRICS, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS, DEFAULT_PRODUCTION_MODE, DEFAULT_FINAL_BLOCKS_ONLY } from "./config.js";
+import { DEFAULT_INACTIVITY_SECONDS, DEFAULT_PARAMS, DEFAULT_HOSTNAME, DEFAULT_PORT, DEFAULT_METRICS_LABELS, DEFAULT_START_BLOCK, DEFAULT_DELAY_BEFORE_START, DEFAULT_HEADERS } from "./config.js";
 
 export interface Package {
-    name: string;
-    version: string;
-    description: string;
+    name?: string;
+    version?: string;
+    description?: string;
 }
 
 export interface RunOptions {
@@ -13,26 +13,30 @@ export interface RunOptions {
     manifest: string;
     moduleName: string;
     params: string[];
-    startBlock: string;
-    stopBlock: string;
+    startBlock: number | bigint | undefined;
+    stopBlock: number | bigint | `+${number}` | undefined;
     substreamsApiKey: string;
     substreamsApiToken: string; // Deprecated
     delayBeforeStart: number;
     cursor: string;
-    productionMode: string;
+    productionMode: boolean;
     inactivitySeconds: number;
     hostname: string;
     port: number;
     metricsLabels: string[];
-    collectDefaultMetrics: string;
+    collectDefaultMetrics: boolean;
     headers: Headers;
-    verbose: string;
-    finalBlocksOnly: string;
+    verbose: boolean;
+    finalBlocksOnly: boolean;
+    plaintext: boolean;
 }
 
-export function program(pkg: Package) {
+export function program(pkg?: Package) {
     const program = new Command();
-    program.name(pkg.name).version(pkg.version, "-v, --version", `version for ${pkg.name}`);
+    const name = pkg?.name ?? "substreams-sink";
+    program.name(name);
+    if ( pkg?.version ) program.version(pkg.version, "-v, --version", `version for ${name}`);
+    if ( pkg?.description ) program.description(pkg.description);
     program.command("completion").description("Generate the autocompletion script for the specified shell");
     program.command("help").description("Display help for command");
     program.showHelpAfterError();
@@ -60,8 +64,8 @@ function handleHeaders(value: string, previous: Headers) {
     return headers;
 }
 
-export function run(program: Command, pkg: Package, options: AddRunOptions = {}) {
-    return addRunOptions(program.command("run"), pkg, options);
+export function run(program: Command, options: AddRunOptions = {}) {
+    return addRunOptions(program.command("run"), options);
 }
 
 export function list(program: Command) {
@@ -82,10 +86,18 @@ interface AddRunOptions {
     metrics?: boolean;
 }
 
-export function addRunOptions(program: Command, pkg: Package, options: AddRunOptions = {}) {
+function parseBoolean(value?: string) {
+    if ( value !== undefined ) return value.toLocaleLowerCase() === "true";
+    return false;
+}
+
+function addBoolean(flags: string, description: string, env: string) {
+    return new Option(flags, description).default(false).env(env).choices(["true", "false"]).argParser(parseBoolean);
+}
+
+export function addRunOptions(program: Command, options: AddRunOptions = {}) {
     const command = program
         .showHelpAfterError()
-        .description(pkg.description)
         .addOption(new Option("-e --substreams-endpoint <string>", "Substreams gRPC endpoint to stream data from").makeOptionMandatory().env("SUBSTREAMS_ENDPOINT"))
         .addOption(new Option("--manifest <string>", "URL of Substreams package").makeOptionMandatory().env("MANIFEST"))
         .addOption(new Option("--module-name <string>", "Name of the output module (declared in the manifest)").makeOptionMandatory().env("MODULE_NAME"))
@@ -96,11 +108,12 @@ export function addRunOptions(program: Command, pkg: Package, options: AddRunOpt
         .addOption(new Option("--substreams-api-token <string>", "(DEPRECATED) API token for the Substream endpoint").hideHelp(true).env("SUBSTREAMS_API_TOKEN"))
         .addOption(new Option("--delay-before-start <int>", "Delay (ms) before starting Substreams").default(DEFAULT_DELAY_BEFORE_START).env("DELAY_BEFORE_START"))
         .addOption(new Option("--cursor <string>", "Cursor to stream from. Leave blank for no cursor"))
-        .addOption(new Option("--production-mode <boolean>", "Enable production mode, allows cached Substreams data if available").default(DEFAULT_PRODUCTION_MODE).env("PRODUCTION_MODE"))
+        .addOption(addBoolean("--production-mode <boolean>", "Enable production mode, allows cached Substreams data if available", "PRODUCTION_MODE"))
+        .addOption(addBoolean("--final-blocks-only <boolean>", "Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD", "FINAL_BLOCKS_ONLY"))
         .addOption(new Option("--inactivity-seconds <int>", "If set, the sink will stop when inactive for over a certain amount of seconds").default(DEFAULT_INACTIVITY_SECONDS).env("INACTIVITY_SECONDS"))
         .addOption(new Option("--headers [string...]", "Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA)").default(DEFAULT_HEADERS).env("HEADERS").argParser(handleHeaders))
-        .addOption(new Option("--final-blocks-only <boolean>", "Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD").default(DEFAULT_FINAL_BLOCKS_ONLY).env("FINAL_BLOCKS_ONLY"))
-        .addOption(new Option("--verbose <boolean>", "Enable verbose logging").default(DEFAULT_VERBOSE).env("VERBOSE"))
+        .addOption(addBoolean("--plaintext <boolean>", "Establish GRPC connection in plaintext", "PLAIN_TEXT"))
+        .addOption(addBoolean("--verbose <boolean>", "Enable verbose logging", "VERBOSE"));
 
         // HTTP and Prometheus metrics options
         if ( options.http !== false ) {
@@ -111,7 +124,7 @@ export function addRunOptions(program: Command, pkg: Package, options: AddRunOpt
         if ( options.metrics !== false ) {
             command
                 .addOption(new Option("--metrics-labels [string...]", "To apply generic labels to all default metrics (ex: --labels foo=bar)").default(DEFAULT_METRICS_LABELS).env("METRICS_LABELS").argParser(handleMetricsLabels))
-                .addOption(new Option("--collect-default-metrics <boolean>", "Collect default metrics").default(DEFAULT_COLLECT_DEFAULT_METRICS).env("COLLECT_DEFAULT_METRICS"))
+                .addOption(addBoolean("--collect-default-metrics <boolean>", "Collect default metrics", "COLLECT_DEFAULT_METRICS"));
         }
     return command;
 }

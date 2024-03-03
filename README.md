@@ -43,6 +43,7 @@ Usage: substreams-sink run [options]
 Substreams Sink
 
 Options:
+  -v, --version                        version for substreams-sink
   -e --substreams-endpoint <string>    Substreams gRPC endpoint to stream data from (env: SUBSTREAMS_ENDPOINT)
   --manifest <string>                  URL of Substreams package (env: MANIFEST)
   --module-name <string>               Name of the output module (declared in the manifest) (env: MODULE_NAME)
@@ -52,15 +53,16 @@ Options:
   --substreams-api-key <string>        API key for the Substream endpoint (env: SUBSTREAMS_API_KEY)
   --delay-before-start <int>           Delay (ms) before starting Substreams (default: 0, env: DELAY_BEFORE_START)
   --cursor <string>                    Cursor to stream from. Leave blank for no cursor
-  --production-mode <boolean>          Enable production mode, allows cached Substreams data if available (default: "false", env: PRODUCTION_MODE)
+  --production-mode <boolean>          Enable production mode, allows cached Substreams data if available (choices: "true", "false", default: false, env: PRODUCTION_MODE)
+  --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (choices: "true", "false", default: false, env: FINAL_BLOCKS_ONLY)
   --inactivity-seconds <int>           If set, the sink will stop when inactive for over a certain amount of seconds (default: 300, env: INACTIVITY_SECONDS)
+  --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: {}, env: HEADERS)
+  --plaintext <boolean>                Establish GRPC connection in plaintext (choices: "true", "false", default: false, env: PLAIN_TEXT)
+  --verbose <boolean>                  Enable verbose logging (choices: "true", "false", default: false, env: VERBOSE)
   --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
   --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
   --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
-  --collect-default-metrics <boolean>  Collect default metrics (default: "false", env: COLLECT_DEFAULT_METRICS)
-  --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: {}, env: HEADERS)
-  --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
-  --verbose <boolean>                  Enable verbose logging (default: "false", env: VERBOSE)
+  --collect-default-metrics <boolean>  Collect default metrics (choices: "true", "false", default: false, env: COLLECT_DEFAULT_METRICS)
   -h, --help                           display help for command
 ```
 
@@ -84,12 +86,22 @@ STOP_BLOCK=1000020
 
 **example.js**
 ```js
-import pkg from "./package.json" assert { type: "json" };
 import { commander, setup, prometheus, http, logger, fileCursor } from "substreams-sink";
+
+const pkg = {
+  name: "substreams-sink",
+  version: "0.0.1",
+  description: "Substreams Sink long description",
+}
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
-const command = commander.run(program, pkg);
+const command = commander.addRunOptions(program);
+logger.setName(pkg.name);
+
+// Setup CLI using Commander
+const program = commander.program(pkg);
+const command = commander.addRunOptions(program);
 logger.setName(pkg.name);
 
 // Custom Prometheus Counters

@@ -12,7 +12,7 @@ import { health } from "./health.js";
 
 export async function setup(options: RunOptions) {
     // Configure logging with TSLog
-    if (String(options.verbose) === "true") logger.enable();
+    if (options.verbose) logger.enable();
 
     // Download Substream package
     const manifest = options.manifest;
@@ -24,20 +24,19 @@ export async function setup(options: RunOptions) {
     const token = options.substreamsApiKey ?? options.substreamsApiToken;
     if ( token?.includes(".")) throw new Error("JWT token is not longer supported, please use Substreams API key instead");
 
-    // append https if not present
-    if (baseUrl.match(/http/) === null) {
-        baseUrl = `https://${baseUrl}`;
-    }
-
     // User parameters
-    const outputModule = options.moduleName;
     const startBlockNum = options.startBlock as any;
-    const stopBlockNum = options.stopBlock as any;
-    const params = options.params;
-    const headers = options.headers;
-    const startCursor = options.cursor;
-    const productionMode = String(options.productionMode) === "true";
-    const finalBlocksOnly = String(options.finalBlocksOnly) === "true";
+    const stopBlockNum = options.stopBlock;
+    const { moduleName: outputModule, cursor: startCursor } = options; // renamed otions
+    const { params, headers, productionMode, finalBlocksOnly, plaintext } = options;
+
+    // append https/http if not present
+    if (!baseUrl.startsWith("http")) {
+        baseUrl = `${plaintext ? "http" : "https"}://${baseUrl}`;
+    }
+    if ( plaintext && baseUrl.startsWith("https")) {
+        throw new Error("--plaintext mode is not supported with https");
+    }
 
     // Adding default headers
     headers.set("X-User-Agent", "substreams-sink");
