@@ -14,13 +14,12 @@ export const server = http.createServer(async (req, res) => {
     }
 });
 
-export async function listen(options: RunOptions) {
+export async function listen(options: RunOptions): Promise<http.Server> {
     const hostname = options.hostname;
     const port = options.port;
     return new Promise(resolve => {
         server.listen(port, hostname, () => {
-            logger.info("prometheus server", { hostname, port });
-            resolve(true);
+            resolve(server);
         });
     })
 }

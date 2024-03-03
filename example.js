@@ -1,9 +1,14 @@
-import pkg from "./package.json" assert { type: "json" };
 import { commander, setup, prometheus, http, logger, fileCursor } from "./dist/index.js";
+
+const pkg = {
+  name: "substreams-sink",
+  version: "0.0.1",
+  description: "Substreams Sink long description",
+}
 
 // Setup CLI using Commander
 const program = commander.program(pkg);
-const command = commander.run(program, pkg);
+const command = commander.addRunOptions(program);
 logger.setName(pkg.name);
 
 // Custom Prometheus Counters
