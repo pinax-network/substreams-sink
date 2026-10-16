@@ -11,5 +11,6 @@ dist
 data
 build
 *.lock
+!bun.lock
 !example.js
 .env
